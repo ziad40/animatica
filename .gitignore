@@ -21,6 +21,7 @@ dist/
 # Local environment files
 .env.local
 .env.*.local
+.env
 
 # macOS system files
 .DS_Store
