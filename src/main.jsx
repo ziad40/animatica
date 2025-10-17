@@ -5,6 +5,7 @@ import { UserProvider } from "@/context/UserContext";
 import Header from "@/components/layout/Header";
 import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
+import "@/style.css";
 
 
 function App() {
