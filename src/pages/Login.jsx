@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { login } from "@/services/authService";
 import { UserContext } from "@/context/UserContext";
 import { useNavigate } from "react-router-dom";
+import PasswordInput from "@/components/ui/passwordInput";
 
 const Login = () => {
   // If your UserContext exposes a login handler, use it so the app updates immediately.
@@ -36,12 +37,9 @@ const Login = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <input
-        type="password"
-        placeholder="Password"
-        className="border p-2 w-full mb-3"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+      <PasswordInput
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
       />
       <button
         type="submit"
@@ -54,3 +52,5 @@ const Login = () => {
 };
 
 export default Login;
+
+

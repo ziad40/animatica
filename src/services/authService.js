@@ -15,6 +15,22 @@ export const login = async (email, password) => {
   }
 };
 
+export const register = async (name, email, password) => {
+  try {
+    // Ensure leading slash so baseURL and path concatenate correctly
+    const response = await api.post("/auth/register", {name, email, password});
+    // if response status is 201 then forward user to login page
+    if (response.status === 201) {
+      return response;
+    }
+    return false;
+  } catch (error) {
+    console.error("Failed to register:", error);
+    // Rethrow so callers can handle network/auth errors
+    throw error;
+  }
+};
+
 export const logout = () => {
   localStorage.removeItem("animatica_token");
 };
