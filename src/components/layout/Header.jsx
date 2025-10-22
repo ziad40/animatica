@@ -19,7 +19,7 @@ const Header = () => {
   return (
     <header className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
-        <h1 className="text-xl font-bold">Animatica</h1>
+        <h1 className="text-xl font-bold">CPU Scheduler</h1>
 
         <div className="ml-auto">
           {user ? (
