@@ -3,9 +3,8 @@ import ProblemViewer from "../ui/problemViewer";
 import React, { useState } from 'react';
 import { getProblem } from "@/services/problemService";
 
-const Problem = () => {
+const Problem = ({ problem, setProblem }) => {
   const [problemType, setProblemType] = useState("");
-  const [problem, setProblem] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 

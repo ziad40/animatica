@@ -1,6 +1,6 @@
 
 
-const Solution = () => {
+const Solution = ({ problem }) => {
 
   return (
     <div>

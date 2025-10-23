@@ -4,6 +4,7 @@ import Problem from "@/components/layout/Problem";
 import Solution from "@/components/layout/Solution";
 
 const Dashboard = () => {
+  const [problem, setProblem] = useState(null);
   // left column width in percent (0-100)
   const [leftWidth, setLeftWidth] = useState(40);
   // top area height in percent inside right column
@@ -77,7 +78,7 @@ const Dashboard = () => {
           }}
           className="border-r border-gray-200 bg-white"
         >
-          <Problem />
+          <Problem problem = {problem} setProblem={setProblem}/>
         </div>
 
         {/* Vertical splitter - hidden on mobile */}
@@ -112,7 +113,7 @@ const Dashboard = () => {
             }}
             className="bg-white"
           >
-            <Playground />
+            <Playground problem = {problem}/>
           </div>
 
           {/* Horizontal splitter - hidden on mobile */}
@@ -135,7 +136,7 @@ const Dashboard = () => {
             }}
             className="bg-white"
           >
-            <Solution />
+            <Solution problem = {problem}/>
           </div>
         </div>
       </div>
