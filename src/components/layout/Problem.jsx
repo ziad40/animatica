@@ -36,6 +36,7 @@ const Problem = ({ problem, setProblem }) => {
         options={[
           { label: "First Come First Serve", value: "FCFS" },
         ]}
+        selectedValue={problemType}
         onSelect={(value) => {
           setProblemType(value.value);
         }}

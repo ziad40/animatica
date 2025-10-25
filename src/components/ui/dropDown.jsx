@@ -1,28 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-const DropDown = ({ options, onSelect, placeholder }) => {
+// Controlled-friendly dropdown.
+// Props:
+// - options: [{label, value}]
+// - onSelect: called with the option object when selected
+// - selectedValue: the currently selected option's value (nullable)
+// - placeholder, className
+const DropDown = ({ options = [], onSelect = () => {}, placeholder = 'Select', className, selectedValue = null }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState(null);
+    const containerRef = useRef(null);
 
-    const toggleOpen = () => {
-        setIsOpen(!isOpen)
-    }
+    const toggleOpen = () => setIsOpen(v => !v);
+
     const handleSelect = (option) => {
-        setSelectedOption(option);
         onSelect(option);
-        setIsOpen(false)
+        setIsOpen(false);
     }
+
+    // close on outside click
+    useEffect(() => {
+        const onDoc = (e) => {
+            if (!containerRef.current) return;
+            if (!containerRef.current.contains(e.target)) setIsOpen(false);
+        };
+        document.addEventListener('mousedown', onDoc);
+        return () => document.removeEventListener('mousedown', onDoc);
+    }, []);
+
+    // Determine label to show from selectedValue prop
+    const selectedLabel = options.find(o => String(o.value) === String(selectedValue))?.label;
 
     return (
-        <div className="relative inline-block text-left">
+        <div ref={containerRef} className="relative inline-block text-left">
             <button
                 type="button"
-                className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                className={className}
                 onClick={toggleOpen}
             >
-                {selectedOption ? selectedOption.label : placeholder}
+                {selectedLabel || placeholder}
                 <svg
-                    className="-mr-1 ml-2 h-5 w-5"
+                    className="-mr-1 ml-2 h-5 w-5 inline-block"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
@@ -36,15 +53,20 @@ const DropDown = ({ options, onSelect, placeholder }) => {
                 </svg>
             </button>
             {isOpen && (
-                <ul className="dropdown-menu">
-                {options.map((option) => (
-                    <li className='inline-flex justify-center w-full rounded-md border border-gray-300 bg-gray-100' key={option.value} onClick={() => handleSelect(option)} >
-                    {option.label}
-                    </li>
-                ))}
+                // absolute positioned menu to float above other content
+                <ul className="absolute z-50 mt-1 w-56 max-h-56 overflow-auto bg-white border rounded-md shadow-lg py-1">
+                    {options.map((option) => (
+                        <li
+                            key={option.value}
+                            onClick={() => handleSelect(option)}
+                            className="block w-full text-left px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                        >
+                            {option.label}
+                        </li>
+                    ))}
                 </ul>
             )}
-        </div>        
+        </div>
     )
 }
 export default DropDown;
