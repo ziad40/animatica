@@ -5,6 +5,8 @@ import Solution from "@/components/layout/Solution";
 
 const Dashboard = () => {
   const [problem, setProblem] = useState(null);
+  const [scheduledProcesses, setScheduledProcesses] = useState([]);
+
   // left column width in percent (0-100)
   const [leftWidth, setLeftWidth] = useState(40);
   // top area height in percent inside right column
@@ -78,7 +80,7 @@ const Dashboard = () => {
           }}
           className="border-r border-gray-200 bg-white"
         >
-          <Problem problem = {problem} setProblem={setProblem}/>
+          <Problem problem = {problem} setProblem={setProblem} setScheduledProcesses = {setScheduledProcesses}/>
         </div>
 
         {/* Vertical splitter - hidden on mobile */}
@@ -113,7 +115,7 @@ const Dashboard = () => {
             }}
             className="bg-white"
           >
-            <Playground problem = {problem}/>
+            <Playground problem = {problem} scheduledProcesses = {scheduledProcesses} setScheduledProcesses = {setScheduledProcesses}/>
           </div>
 
           {/* Horizontal splitter - hidden on mobile */}

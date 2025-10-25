@@ -3,14 +3,14 @@ import ProblemViewer from "../ui/problemViewer";
 import React, { useState } from 'react';
 import { getProblem } from "@/services/problemService";
 
-const Problem = ({ problem, setProblem }) => {
+const Problem = ({ problem, setProblem , setScheduledProcesses }) => {
   const [problemType, setProblemType] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
     setError("");
-
+    setScheduledProcesses([]); // reset scheduled processes on new problem
     if (!problemType) {
       setError("Please choose a problem type before generating.");
       return;

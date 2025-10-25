@@ -1,10 +1,11 @@
+import TimeLine from '../ui/timelineDrawer';
 
 
 const Solution = ({ problem }) => {
 
   return (
     <div>
-        <h1>Solution Page</h1>
+        <TimeLine processes = {problem?.solution.schedule}/>
     </div>
   );
 };

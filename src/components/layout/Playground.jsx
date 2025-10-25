@@ -3,8 +3,8 @@ import DropDown from '@/components/ui/dropDown';
 import NumberInput from '@/components/ui/numberInput';
 import ActionButton from '@/components/ui/ActionButton';
 import { PlusCircle, Undo2 } from "lucide-react";
-const Playground = ({ problem }) => {
-  const [scheduledProcesses, setScheduledProcesses] = useState([]);
+import TimeLine from '../ui/timelineDrawer';
+const Playground = ({ problem , scheduledProcesses, setScheduledProcesses}) => {
   const [nextProcess, setNextProcess] = useState(null);
   const [nextTimeUnit, setNextTimeUnit] = useState(null);
 
@@ -31,7 +31,8 @@ const Playground = ({ problem }) => {
       }
     }
   return (
-    <div className='m-4 flex flex-row items-center justify-left'>
+    <div>
+      <div className='m-4 flex flex-row items-center justify-left'>
         <DropDown
           options={
             problem ? [{ label: "idle", value: -1 },
@@ -75,7 +76,10 @@ const Playground = ({ problem }) => {
           <span className="hidden sm:inline">Undo</span>
         </ActionButton>
 
+      </div>
+      <TimeLine processes={scheduledProcesses}/>
     </div>
+    
   );
 };
 
