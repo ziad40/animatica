@@ -10,7 +10,7 @@ const TimeLine = ({ processes = [] }) => {
 
   return (
     // use nowrap + overflow so the timeline stays a single horizontal bar and items don't push layout
-    <div className="flex flex-col p-2 border-2 border-solid w-full">
+    <div className="flex flex-col p-2 border-2 border-dashed w-full">
       <div className="flex flex-row flex-nowrap items-stretch" role="list" aria-label="timeline" title="Processes Time Line">
         {processes.map((p, idx) => (
           <ProcessItem
@@ -62,7 +62,7 @@ const ProcessItem = ({ process, totalUnitTime, fallbackWidth }) => {
   return (
     <div
       role="listitem"
-      className="border-2 border-dashed flex items-center justify-center px-2 text-sm bg-gray-50"
+      className="border-2 border-solid flex items-center justify-center px-2 text-sm bg-gray-50"
       style={{ width: `${pct}%` }}
       title={`${label} — ${units} unit${units !== 1 ? 's' : ''}`}
     >

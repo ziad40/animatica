@@ -1,11 +1,10 @@
 import React , { useState }from 'react';
 import NumberInput from './numberInput.jsx';
 
-const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {} }) => {
+const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, waitingTimes, setWaitingTimes }) => {
     // processes: [{ id, arrivalTime, burstTime }, ...]
     // processes: [{ processId, timeUnits }, ...]
 
-    const [waitingTimes, setWaitingTimes] = useState({});
 
     const handleChangeWaitingTime = (pid, value) =>{
         setWaitingTimes(prev => ({
@@ -24,7 +23,7 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {} }) => {
 
     return (
         // constrain height so the table fits in the Playground; make vertically scrollable when content overflows
-        <div className="w-1/2 max-h-[60vh] overflow-auto">
+        <div className="w-1/2 max-h-[60vh] overflow-auto bg-transparent">
             <table className="min-w-full table-fixed divide-y divide-gray-200 text-sm">
                 <thead className="bg-gray-50">
                     <tr>
@@ -32,7 +31,7 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {} }) => {
                         <th className="px-3 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waiting Time</th>
                     </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-100">
+                <tbody className="bg-transparent divide-y divide-gray-100">
                     {processes.map((p, idx) => (
                         <tr key={p.id || p.processId} className="hover:bg-gray-50">
                             <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700">{p.id || p.processId}</td>

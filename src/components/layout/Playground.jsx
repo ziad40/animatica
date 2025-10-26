@@ -10,6 +10,8 @@ import WaitingTimeTable from '../ui/waitingTimeTable.jsx';
 const Playground = ({ problem , scheduledProcesses, setScheduledProcesses}) => {
   const [nextProcess, setNextProcess] = useState(null);
   const [nextTimeUnit, setNextTimeUnit] = useState(null);
+  const [waitingTimes, setWaitingTimes] = useState({});
+  const [averageWaitingTime, setaverageWaitingTime] = useState(null);
 
   const handleAddProcess = () =>{
     const parsed = parseInt(nextTimeUnit, 10);
@@ -34,8 +36,8 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses}) => {
       }
     }
   return (
-    <div>
-      <div className='m-4 flex flex-row items-center justify-left'>
+    <div className='bg-blue-50'>
+      <div className='m-4 flex flex-row items-center justify-left bg-transparent'>
         <DropDown
           options={
             problem ? [{ label: "idle", value: -1 },
@@ -81,7 +83,28 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses}) => {
 
       </div>
       <TimeLine processes={scheduledProcesses}/>
-      <WaitingTimeTable processes={problem ? problem.question.processes : []}/>
+      <WaitingTimeTable processes={problem ? problem.question.processes : []}
+         waitingTimes={waitingTimes}
+         setWaitingTimes = {setWaitingTimes}
+      />
+      <div className="w-1/2 flex items-center justify-between bg-transparent border border-gray-200 rounded-sm p-3 shadow-sm max-w-md mx-auto">
+        <label
+          htmlFor="averageWaitingTime"
+          className="text-gray-700 text-sm font-medium mr-3"
+        >
+          Total Average Waiting Time:
+        </label>
+        
+        <NumberInput
+          onSelect={setaverageWaitingTime}
+          placeholder="Total Average Waiting Time"
+          className=" px-3 py-1.5 text-blue-700 font-semibold text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-right transition-all"
+          value={averageWaitingTime}
+          allowDecimal={true}
+          decimalSeparator='.'
+        />
+      </div>
+
     </div>
     
   );
