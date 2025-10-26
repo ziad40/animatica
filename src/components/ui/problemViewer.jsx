@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ProblemViewer = ({ processes = [] }) => {
-    // processes: [{ id, arrivalTime, burstTime }, ...]
+    // processes: [{ id, timeUnits }, ...]
 
     if (!processes || processes.length === 0) {
         return (

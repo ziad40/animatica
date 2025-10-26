@@ -4,6 +4,9 @@ import NumberInput from '@/components/ui/numberInput';
 import ActionButton from '@/components/ui/ActionButton';
 import { PlusCircle, Undo2 } from "lucide-react";
 import TimeLine from '../ui/timelineDrawer';
+import WaitingTimeTable from '../ui/waitingTimeTable.jsx';
+
+
 const Playground = ({ problem , scheduledProcesses, setScheduledProcesses}) => {
   const [nextProcess, setNextProcess] = useState(null);
   const [nextTimeUnit, setNextTimeUnit] = useState(null);
@@ -78,6 +81,7 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses}) => {
 
       </div>
       <TimeLine processes={scheduledProcesses}/>
+      <WaitingTimeTable processes={problem ? problem.question.processes : []}/>
     </div>
     
   );
