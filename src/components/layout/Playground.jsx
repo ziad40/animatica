@@ -11,7 +11,7 @@ import AssistantPNG from "@/assets/images/assistant.png";
 import { submitSolution } from "@/services/problemService";
 import { useOverlay } from "@/context/OverlayContext";
 
-const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, currentProblemId, setCurrentProblemId}) => {
+const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, currentProblemId, setCurrentProblemId, setShowSolution}) => {
   const [nextProcess, setNextProcess] = useState(null);
   const [nextTimeUnit, setNextTimeUnit] = useState(null);
   const [waitingTimes, setWaitingTimes] = useState({});
@@ -55,6 +55,7 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
       }
 
       if (response?.problemId) setCurrentProblemId(response.problemId);
+      setShowSolution(true);
       showOverlay(
         <div className="flex flex-col items-center space-y-2">
           <CheckCircle size={48} className="text-green-500" />

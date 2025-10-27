@@ -7,6 +7,7 @@ const Dashboard = () => {
   const [problem, setProblem] = useState(null);
   const [scheduledProcesses, setScheduledProcesses] = useState([]);
   const [currentProblemId, setCurrentProblemId] = useState(null);
+  const [showSolution, setShowSolution] = useState(false);
 
   // left column width in percent (0-100)
   const [leftWidth, setLeftWidth] = useState(40);
@@ -81,7 +82,7 @@ const Dashboard = () => {
           }}
           className="border-r border-gray-200 bg-white"
         >
-          <Problem problem = {problem} setProblem={setProblem} setScheduledProcesses = {setScheduledProcesses} setCurrentProblemId = {setCurrentProblemId}/>
+          <Problem problem = {problem} setProblem={setProblem} setScheduledProcesses = {setScheduledProcesses} setCurrentProblemId = {setCurrentProblemId} setShowSolution={setShowSolution}/>
         </div>
 
         {/* Vertical splitter - hidden on mobile */}
@@ -118,7 +119,8 @@ const Dashboard = () => {
           >
             <Playground problem = {problem} scheduledProcesses = {scheduledProcesses}
             setScheduledProcesses = {setScheduledProcesses} 
-            currentProblemId = {currentProblemId} setCurrentProblemId = {setCurrentProblemId}/>
+            currentProblemId = {currentProblemId} setCurrentProblemId = {setCurrentProblemId}
+            setShowSolution = {setShowSolution}/>
           </div>
 
           {/* Horizontal splitter - hidden on mobile */}
@@ -141,7 +143,7 @@ const Dashboard = () => {
             }}
             className="bg-white"
           >
-            <Solution problem = {problem}/>
+            <Solution problem = {problem} showSolution = {showSolution} setShowSolution = {setShowSolution}/>
           </div>
         </div>
       </div>

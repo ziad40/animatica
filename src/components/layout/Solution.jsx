@@ -1,31 +1,47 @@
 import TimeLine from '../ui/timelineDrawer';
 import WaitingTimeTable from '../ui/waitingTimeTable.jsx';
 import React, { useState } from 'react';
+import ActionButton from '../ui/ActionButton';
 
-
-const Solution = ({ problem }) => {
+const Solution = ({ problem, showSolution, setShowSolution }) => {
   const [waitingTimes, setWaitingTimes] = useState({});
-  
+
   
   return (
-    <div className='bg-green-50'>
-        <TimeLine processes = {problem?.solution.schedule} colorMap = {problem?.colorMap}/>
-        <WaitingTimeTable processes={problem ? problem.question.processes : []}
-                          actualWaitingTimes={problem? problem.solution.waitingTimes : {}}
-                          waitingTimes={waitingTimes}
-                          setWaitingTimes = {setWaitingTimes}
-                        />
-        <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-x p-2 shadow-sm max-w-md mx-auto">
-          <span className="text-gray-700 text-sm font-medium">
-            Total Average Waiting Time:
-          </span>
-          <span className="text-blue-600 font-semibold text-sm">
-            {problem ? `${problem.solution.averageWaitingTime.toFixed(2)} time units` : '--'}
-          </span>
-        </div>
-
-
-    </div>
+    <>
+    {
+      showSolution && problem ?
+        (
+          <div className='bg-green-50'>
+              <TimeLine processes = {problem?.solution.schedule} colorMap = {problem?.colorMap}/>
+              <WaitingTimeTable processes={problem ? problem.question.processes : []}
+                                actualWaitingTimes={problem? problem.solution.waitingTimes : {}}
+                                waitingTimes={waitingTimes}
+                                setWaitingTimes = {setWaitingTimes}
+                              />
+              <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-x p-2 shadow-sm max-w-md mx-auto">
+                <span className="text-gray-700 text-sm font-medium">
+                  Total Average Waiting Time:
+                </span>
+                <span className="text-blue-600 font-semibold text-sm">
+                  {problem ? `${problem.solution.averageWaitingTime.toFixed(2)} time units` : '--'}
+                </span>
+              </div>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-full text-gray-500">
+            <p className="text-lg">Solution will be displayed here after submission.</p>
+            <ActionButton
+              variant="primary"
+              onClick={() => setShowSolution(true)}
+              className="mt-4"
+            >
+              Show Solution
+            </ActionButton>
+          </div>
+        )
+    }
+    </>
   );
 };
 
