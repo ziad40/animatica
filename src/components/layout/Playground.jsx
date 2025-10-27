@@ -9,7 +9,7 @@ import { Avatar } from '@/components/ui/Avatar';
 import AssistantGif from "@/assets/gif/assistant.gif";
 import AssistantPNG from "@/assets/images/assistant.png";
 import { submitSolution } from "@/services/problemService";
-import { useOverlay } from "@/context/OverlayContext";
+import { useOverlay } from "@/context/OverlayContextCard";
 
 const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, currentProblemId, setCurrentProblemId, setShowSolution}) => {
   const [nextProcess, setNextProcess] = useState(null);

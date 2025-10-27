@@ -7,7 +7,7 @@ import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import "@/style.css";
-import { OverlayProvider } from "@/context/OverlayContext";
+import { OverlayProvider } from "@/context/OverlayContextCard";
 
 function App() {
   return (
