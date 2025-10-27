@@ -36,7 +36,7 @@ const Header = () => {
 const UserLoggedIn = ({ user, onLogout }) => {
   return (
     <div className="flex items-center gap-4">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2" title="profile data will be added later for student actions">
         <Avatar src={user?.avatar} />
         <span className="font-medium">{user?.username || "Guest"}</span>
       </div>
