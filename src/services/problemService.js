@@ -8,7 +8,18 @@ export const getProblem = async (type) => {
     return response.data;
   } catch (error) {
     console.error(`Failed to Fetch problem of type ${type}:`, error);
-    // Rethrow so callers can handle network/auth errors
+    throw error;
+  }
+};
+
+
+export const submitSolution = async (correctSolution, StudentSolution) => {
+  try {
+    // Ensure leading slash so baseURL and path concatenate correctly
+    const response = await api.post("/problem/solve", { correctSolution, StudentSolution });
+    return response.data;
+  } catch (error) {
+    console.error('Failed to submit solution : ', error);
     throw error;
   }
 };

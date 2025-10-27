@@ -8,7 +8,7 @@ const Solution = ({ problem }) => {
   
   return (
     <div className='bg-green-50'>
-        <TimeLine processes = {problem?.solution.schedule}/>
+        <TimeLine processes = {problem?.solution.schedule} colorMap = {problem?.colorMap}/>
         <WaitingTimeTable processes={problem ? problem.question.processes : []}
                           actualWaitingTimes={problem? problem.solution.waitingTimes : {}}
                           waitingTimes={waitingTimes}
@@ -19,7 +19,7 @@ const Solution = ({ problem }) => {
             Total Average Waiting Time:
           </span>
           <span className="text-blue-600 font-semibold text-sm">
-            {problem ? `${problem.solution.averageWaitingTime} time units` : '--'}
+            {problem ? `${problem.solution.averageWaitingTime.toFixed(2)} time units` : '--'}
           </span>
         </div>
 
