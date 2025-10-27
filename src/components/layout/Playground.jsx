@@ -11,7 +11,7 @@ import AssistantPNG from "@/assets/images/assistant.png";
 import { submitSolution } from "@/services/problemService";
 
 
-const Playground = ({ problem , scheduledProcesses, setScheduledProcesses}) => {
+const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, currentProblemId, setCurrentProblemId}) => {
   const [nextProcess, setNextProcess] = useState(null);
   const [nextTimeUnit, setNextTimeUnit] = useState(null);
   const [waitingTimes, setWaitingTimes] = useState({});
@@ -45,7 +45,20 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses}) => {
       waitingTimes,
       averageWaitingTime: parseFloat(averageWaitingTime),
     };
-    await submitSolution(problem?.solution, answer);
+    try {
+      let response;
+      if (currentProblemId == null) {
+        response = await submitSolution(null, problem, answer);
+      } else {
+        response = await submitSolution(currentProblemId, null, answer);
+      }
+
+      if (response?.problemId) setCurrentProblemId(response.problemId);
+      return response;
+    } catch (err) {
+      console.error('Failed to submit solution from Playground:', err);
+      throw err;
+    }
   }
   return (
     <div className='bg-blue-50'>

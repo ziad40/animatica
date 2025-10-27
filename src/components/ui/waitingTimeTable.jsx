@@ -7,9 +7,10 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, waitingTime
 
 
     const handleChangeWaitingTime = (pid, value) =>{
+        if (value === '') return;
         setWaitingTimes(prev => ({
             ...prev,
-            [pid]: value,
+            [pid]: parseFloat(value),
         }));
         console.log("waitingTimes");
         console.log(waitingTimes);

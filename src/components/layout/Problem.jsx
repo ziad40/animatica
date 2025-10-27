@@ -3,14 +3,14 @@ import ProblemViewer from "../ui/problemViewer";
 import React, { useState } from 'react';
 import { getProblem } from "@/services/problemService";
 
-const Problem = ({ problem, setProblem , setScheduledProcesses }) => {
+const Problem = ({ problem, setProblem , setScheduledProcesses, setCurrentProblemId }) => {
   const [problemType, setProblemType] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // assign random color to each process ID for consistent display
   const assignColorsToProcesses = (processes) => {
-    const colors = ['#EF4444', '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316', '#6366F1', '#E11D48'];
+    const colors = ['#f0b05cff', '#695c36ff', '#f5f105ff', '#cfca86ff', '#72b803ff', '#8bbd94ff', '#0be0d6ff', '#06bcf3ff', '#062ee0ff', '#ca1de1ff'];
     const colorMap = {};
     processes.forEach((p, index) => {
       colorMap[p.id] = colors[index % colors.length];
@@ -38,6 +38,7 @@ const Problem = ({ problem, setProblem , setScheduledProcesses }) => {
       setError("Failed to fetch problem. Try again.");
     } finally {
       setLoading(false);
+      setCurrentProblemId(null);
     }
   };
 
