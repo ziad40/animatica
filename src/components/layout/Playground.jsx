@@ -7,6 +7,7 @@ import TimeLine from '../ui/timelineDrawer';
 import WaitingTimeTable from '../ui/waitingTimeTable.jsx';
 import { Avatar } from '@/components/ui/Avatar';
 import AssistantGif from "@/assets/gif/assistant.gif";
+import AssistantPNG from "@/assets/images/assistant.png";
 import { submitSolution } from "@/services/problemService";
 
 
@@ -133,9 +134,9 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses}) => {
           </div>
 
           {/* Right column: avatar */}
-          <div className="w-32 flex-shrink-0 flex items-start justify-center">
-            <Avatar src = {AssistantGif} size={150} alt="AI Assistant" title='AI Assistant options will be added'/>
-          </div>
+          {problem && <div className="w-32 flex-shrink-0 flex items-start justify-center">
+            <Avatar src = {AssistantPNG} hoverSrc={AssistantGif} size={150} alt="AI Assistant" title='AI Assistant options will be added'/>
+          </div>}
         </div>
       </div>
 
