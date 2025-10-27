@@ -12,8 +12,6 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, waitingTime
             ...prev,
             [pid]: parseFloat(value),
         }));
-        console.log("waitingTimes");
-        console.log(waitingTimes);
     }
 
     if (!processes || processes.length === 0) {

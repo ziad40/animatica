@@ -2,20 +2,21 @@ import React, { useState } from 'react';
 import DropDown from '@/components/ui/dropDown';
 import NumberInput from '@/components/ui/numberInput';
 import ActionButton from '@/components/ui/ActionButton';
-import { PlusCircle, Undo2, Send } from "lucide-react";
+import { PlusCircle, Undo2, Send, CheckCircle } from "lucide-react";
 import TimeLine from '../ui/timelineDrawer';
 import WaitingTimeTable from '../ui/waitingTimeTable.jsx';
 import { Avatar } from '@/components/ui/Avatar';
 import AssistantGif from "@/assets/gif/assistant.gif";
 import AssistantPNG from "@/assets/images/assistant.png";
 import { submitSolution } from "@/services/problemService";
-
+import { useOverlay } from "@/context/OverlayContext";
 
 const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, currentProblemId, setCurrentProblemId}) => {
   const [nextProcess, setNextProcess] = useState(null);
   const [nextTimeUnit, setNextTimeUnit] = useState(null);
   const [waitingTimes, setWaitingTimes] = useState({});
   const [averageWaitingTime, setaverageWaitingTime] = useState(null);
+  const { showOverlay } = useOverlay();
 
   const handleAddProcess = () =>{
     const parsed = parseInt(nextTimeUnit, 10);
@@ -54,6 +55,14 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
       }
 
       if (response?.problemId) setCurrentProblemId(response.problemId);
+      showOverlay(
+        <div className="flex flex-col items-center space-y-2">
+          <CheckCircle size={48} className="text-green-500" />
+          <h2 className="text-xl font-semibold">Good Trial</h2>
+          <p className="text-gray-600">Your solution has been recorded!</p>
+        </div>,
+        3000 // show for 3 seconds
+      );
       return response;
     } catch (err) {
       console.error('Failed to submit solution from Playground:', err);

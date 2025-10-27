@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 const Solution = ({ problem }) => {
   const [waitingTimes, setWaitingTimes] = useState({});
   
+  
   return (
     <div className='bg-green-50'>
         <TimeLine processes = {problem?.solution.schedule} colorMap = {problem?.colorMap}/>

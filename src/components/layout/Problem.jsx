@@ -32,7 +32,6 @@ const Problem = ({ problem, setProblem , setScheduledProcesses, setCurrentProble
       data['colorMap'] = colorMap;
       // store result in problem
       setProblem(data);
-      console.log(data)
     } catch (err) {
       console.error(err);
       setError("Failed to fetch problem. Try again.");
