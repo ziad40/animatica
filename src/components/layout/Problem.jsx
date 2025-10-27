@@ -8,6 +8,15 @@ const Problem = ({ problem, setProblem , setScheduledProcesses }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // assign random color to each process ID for consistent display
+  const assignColorsToProcesses = (processes) => {
+    const colors = ['#EF4444', '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316', '#6366F1', '#E11D48'];
+    const colorMap = {};
+    processes.forEach((p, index) => {
+      colorMap[p.id] = colors[index % colors.length];
+    });
+    return colorMap;
+  }
   const handleGenerate = async () => {
     setError("");
     setScheduledProcesses([]); // reset scheduled processes on new problem
@@ -19,6 +28,8 @@ const Problem = ({ problem, setProblem , setScheduledProcesses }) => {
     try {
       setLoading(true);
       const data = await getProblem(problemType);
+      const colorMap = assignColorsToProcesses(data.question.processes);
+      data['colorMap'] = colorMap;
       // store result in problem
       setProblem(data);
       console.log(data)

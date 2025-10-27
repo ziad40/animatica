@@ -1,7 +1,7 @@
 import React from "react";
 
 // component that have scheduledProcesses to draw represent them in time line
-const TimeLine = ({ processes = [] }) => {
+const TimeLine = ({ processes = [], colorMap = {} }) => {
   // defensive: ensure processes is an array
   const totalUnitTime = processes.reduce((sum, p) => sum + (Number(p.timeUnits) || 0), 0);
 
@@ -10,7 +10,7 @@ const TimeLine = ({ processes = [] }) => {
 
   return (
     // use nowrap + overflow so the timeline stays a single horizontal bar and items don't push layout
-    <div className="flex flex-col p-2 border-2 border-dashed w-full">
+    <div className="flex flex-col p-2 border-2 border-dashed w-full mt-2 mb-2">
       <div className="flex flex-row flex-nowrap items-stretch" role="list" aria-label="timeline" title="Processes Time Line">
         {processes.map((p, idx) => (
           <ProcessItem
@@ -18,6 +18,7 @@ const TimeLine = ({ processes = [] }) => {
             process={p}
             totalUnitTime={totalUnitTime}
             fallbackWidth={fallbackWidth}
+            colorMap={colorMap}
           />
         ))}
       </div>
@@ -54,7 +55,7 @@ const TimeLine = ({ processes = [] }) => {
   );
 };
 
-const ProcessItem = ({ process, totalUnitTime, fallbackWidth }) => {
+const ProcessItem = ({ process, totalUnitTime, fallbackWidth, colorMap = null }) => {
   const units = Number(process?.timeUnits) || 0;
   const pct = totalUnitTime > 0 ? (units / totalUnitTime) * 100 : fallbackWidth;
   const label = process?.processId != null && process.processId !== -1 ? `P${process.processId}` : 'idle';
@@ -62,8 +63,9 @@ const ProcessItem = ({ process, totalUnitTime, fallbackWidth }) => {
   return (
     <div
       role="listitem"
-      className="border-2 border-solid flex items-center justify-center px-2 text-sm bg-gray-50"
-      style={{ width: `${pct}%` }}
+      className="border-2 border-solid flex items-center justify-center px-2 text-sm bg-gray-50 h-1/2"
+      // only set inline backgroundColor when a colorMap is provided; otherwise keep the tailwind bg-gray-50
+      style={{ width: `${pct}%`, backgroundColor: colorMap && process?.processId !== -1 ? (colorMap[process.processId] || '#9CA3AF') : undefined }}
       title={`${label} — ${units} unit${units !== 1 ? 's' : ''}`}
     >
       {label}
