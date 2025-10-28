@@ -12,7 +12,7 @@ const Solution = ({ problem, showSolution, setShowSolution }) => {
     {
       showSolution && problem ?
         (
-          <div className='bg-green-50'>
+          <div>
               <TimeLine processes = {problem?.solution.schedule} colorMap = {problem?.colorMap}/>
               <WaitingTimeTable processes={problem ? problem.question.processes : []}
                                 actualWaitingTimes={problem? problem.solution.waitingTimes : {}}

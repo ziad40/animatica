@@ -28,8 +28,8 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, actualOpera
 
     return (
         // constrain height so the table fits in the Playground; make vertically scrollable when content overflows
-        <div className="w-full md:w-auto max-h-[60vh] overflow-auto bg-transparent">
-            <table className="min-w-full table-fixed divide-y divide-gray-200 text-sm">
+        <div className="w-auto md:w-auto max-h-[60vh] overflow-auto bg-transparent">
+            <table className="min-w-auto table-fixed divide-y divide-gray-200 text-sm">
                 <thead className="bg-gray-50">
                     <tr>
                         <th className="px-3 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Process</th>
@@ -52,7 +52,7 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, actualOpera
                                             handleChangeOperations(p.id || p.processId, e.target.value)
                                         }
                                         placeholder={`Calculation of P${p.id || p.processId} waiting time`}
-                                        className="border border-gray-300 rounded-md px-2 py-1 w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                        className="border border-gray-300 rounded-md px-2 py-1 w-auto text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                                     />
                                 </td>
                             )}
@@ -61,7 +61,7 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, actualOpera
                             ) : (
                                 <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700">
                                     <NumberInput
-                                        className="border p-1 m-0 text-sm"
+                                        className="border border-gray-300 rounded-md px-2 py-1 w-auto text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         onSelect={(value) => {
                                             handleChangeWaitingTime(p.id || p.processId, value);
                                         }}

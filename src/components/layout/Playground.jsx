@@ -73,7 +73,7 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
     }
   }
   return (
-    <div className='bg-blue-50'>
+    <div>
       <div className='m-4 flex flex-row flex-wrap items-center justify-start bg-transparent'>
         <DropDown
           options={

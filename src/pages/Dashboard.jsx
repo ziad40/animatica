@@ -115,7 +115,7 @@ const Dashboard = () => {
               minHeight: isMobile ? "auto" : "50px",
               overflow: isMobile ? "visible" : "auto",
             }}
-            className="bg-white"
+            className="bg-blue-50"
           >
             <Playground problem = {problem} scheduledProcesses = {scheduledProcesses}
             setScheduledProcesses = {setScheduledProcesses} 
@@ -142,7 +142,7 @@ const Dashboard = () => {
               minHeight: isMobile ? "auto" : "50px",
               overflow: isMobile ? "visible" : "auto",
             }}
-            className="bg-white"
+            className='bg-green-50'
           >
             <Solution problem = {problem} showSolution = {showSolution} setShowSolution = {setShowSolution}/>
           </div>
