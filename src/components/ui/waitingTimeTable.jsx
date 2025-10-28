@@ -26,14 +26,14 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, waitingTime
             <table className="min-w-full table-fixed divide-y divide-gray-200 text-sm">
                 <thead className="bg-gray-50">
                     <tr>
-                        <th className="px-3 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PID</th>
+                        <th className="px-3 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Process</th>
                         <th className="px-3 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waiting Time</th>
                     </tr>
                 </thead>
                 <tbody className="bg-transparent divide-y divide-gray-100">
                     {processes.map((p, idx) => (
                         <tr key={p.id || p.processId} className="hover:bg-gray-50">
-                            <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700">{p.id || p.processId}</td>
+                            <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700"><strong>P{p.id || p.processId}</strong></td>
                             {actualWaitingTimes[p.id || p.processId] !== undefined ? (
                                 <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700">{actualWaitingTimes[p.id || p.processId]}</td>
                             ) : (

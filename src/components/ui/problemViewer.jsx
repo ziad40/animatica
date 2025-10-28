@@ -14,7 +14,7 @@ const ProblemViewer = ({ processes = [] }) => {
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                     <tr>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PID</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Process</th>
                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Arrival</th>
                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Burst</th>
                     </tr>
@@ -22,7 +22,7 @@ const ProblemViewer = ({ processes = [] }) => {
                 <tbody className="bg-white divide-y divide-gray-100">
                     {processes.map((p, idx) => (
                         <tr key={p.id} className="hover:bg-gray-50">
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{p.id}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700"><strong>P{p.id}</strong></td>
                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{p.arrivalTime}</td>
                             <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{p.burstTime}</td>
                         </tr>
