@@ -28,8 +28,8 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, actualOpera
 
     return (
         // constrain height so the table fits in the Playground; make vertically scrollable when content overflows
-        <div className="w-auto md:w-auto max-h-[60vh] overflow-auto bg-transparent">
-            <table className="min-w-auto table-fixed divide-y divide-gray-200 text-sm">
+        <div className="w-full overflow-x-auto max-h-[60vh] bg-transparent">
+            <table className="min-w-full table-auto divide-y divide-gray-200 text-sm">
                 <thead className="bg-gray-50">
                     <tr>
                         <th className="px-3 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Process</th>
@@ -40,11 +40,11 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, actualOpera
                 <tbody className="bg-transparent divide-y divide-gray-100">
                     {processes.map((p, idx) => (
                         <tr key={p.id || p.processId} className="hover:bg-gray-50">
-                            <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700"><strong>P{p.id || p.processId}</strong></td>
+                            <td className="px-3 py-1 text-sm text-gray-700"><strong>P{p.id || p.processId}</strong></td>
                             {actualOperations[p.id || p.processId] !== undefined ? (
-                                <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700">{actualOperations[p.id || p.processId]}</td>
+                                <td className="px-3 py-1 text-sm text-gray-700">{actualOperations[p.id || p.processId]}</td>
                             ) : (
-                                <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700">
+                                <td className="px-3 py-1 text-sm text-gray-700">
                                     <input
                                         type="text"
                                         value={operations[p.id || p.processId] ?? ""}
@@ -57,9 +57,9 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, actualOpera
                                 </td>
                             )}
                             {actualWaitingTimes[p.id || p.processId] !== undefined ? (
-                                <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700">{actualWaitingTimes[p.id || p.processId]}</td>
+                                <td className="px-3 py-1 text-sm text-gray-700">{actualWaitingTimes[p.id || p.processId]}</td>
                             ) : (
-                                <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700">
+                                <td className="px-3 py-1 text-sm text-gray-700">
                                     <NumberInput
                                         className="border border-gray-300 rounded-md px-2 py-1 w-auto text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         onSelect={(value) => {
