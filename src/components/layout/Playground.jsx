@@ -15,6 +15,7 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
   const [nextProcess, setNextProcess] = useState(null);
   const [nextTimeUnit, setNextTimeUnit] = useState(null);
   const [waitingTimes, setWaitingTimes] = useState({});
+  const [operations, setOperations] = useState({});
   const [averageWaitingTime, setaverageWaitingTime] = useState(null);
   const { showOverlay } = useOverlay();
 
@@ -44,6 +45,7 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
     const answer = {
       scheduledProcesses,
       waitingTimes,
+      operations,
       averageWaitingTime: parseFloat(averageWaitingTime),
     };
     try {
@@ -140,6 +142,8 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
               processes={problem ? problem.question.processes : []}
               waitingTimes={waitingTimes}
               setWaitingTimes={setWaitingTimes}
+              operations={operations}
+              setOperations={setOperations}
             />
             <div className="flex items-center bg-transparent border border-gray-200 rounded-sm p-3 shadow-sm max-w-md">
               <label htmlFor="averageWaitingTime" className="text-gray-700 text-sm font-medium mr-3">

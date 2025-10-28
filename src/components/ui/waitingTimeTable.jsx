@@ -1,7 +1,7 @@
 import React , { useState }from 'react';
 import NumberInput from './numberInput.jsx';
 
-const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, waitingTimes, setWaitingTimes }) => {
+const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, actualOperations = {}, waitingTimes, setWaitingTimes, operations, setOperations }) => {
     // processes: [{ id, arrivalTime, burstTime }, ...]
     // processes: [{ processId, timeUnits }, ...]
 
@@ -13,6 +13,12 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, waitingTime
             [pid]: parseFloat(value),
         }));
     }
+    const handleChangeOperations = (pid, value) =>{
+        setOperations(prev => ({
+            ...prev,
+            [pid]: value,
+        }));
+    }
 
     if (!processes || processes.length === 0) {
         return (
@@ -22,11 +28,12 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, waitingTime
 
     return (
         // constrain height so the table fits in the Playground; make vertically scrollable when content overflows
-        <div className="w-full md:w-1/2 max-h-[60vh] overflow-auto bg-transparent">
+        <div className="w-full md:w-auto max-h-[60vh] overflow-auto bg-transparent">
             <table className="min-w-full table-fixed divide-y divide-gray-200 text-sm">
                 <thead className="bg-gray-50">
                     <tr>
                         <th className="px-3 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Process</th>
+                        <th className="px-3 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Calculation</th>
                         <th className="px-3 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waiting Time</th>
                     </tr>
                 </thead>
@@ -34,6 +41,21 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, waitingTime
                     {processes.map((p, idx) => (
                         <tr key={p.id || p.processId} className="hover:bg-gray-50">
                             <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700"><strong>P{p.id || p.processId}</strong></td>
+                            {actualOperations[p.id || p.processId] !== undefined ? (
+                                <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700">{actualOperations[p.id || p.processId]}</td>
+                            ) : (
+                                <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700">
+                                    <input
+                                        type="text"
+                                        value={operations[p.id || p.processId] ?? ""}
+                                        onChange={(e) =>
+                                            handleChangeOperations(p.id || p.processId, e.target.value)
+                                        }
+                                        placeholder={`Calculation of P${p.id || p.processId} waiting time`}
+                                        className="border border-gray-300 rounded-md px-2 py-1 w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    />
+                                </td>
+                            )}
                             {actualWaitingTimes[p.id || p.processId] !== undefined ? (
                                 <td className="px-3 py-1 whitespace-nowrap text-sm text-gray-700">{actualWaitingTimes[p.id || p.processId]}</td>
                             ) : (

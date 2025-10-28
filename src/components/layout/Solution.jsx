@@ -5,7 +5,7 @@ import ActionButton from '../ui/ActionButton';
 
 const Solution = ({ problem, showSolution, setShowSolution }) => {
   const [waitingTimes, setWaitingTimes] = useState({});
-
+  const [operations, setOperations] = useState({});
   
   return (
     <>
@@ -18,6 +18,9 @@ const Solution = ({ problem, showSolution, setShowSolution }) => {
                                 actualWaitingTimes={problem? problem.solution.waitingTimes : {}}
                                 waitingTimes={waitingTimes}
                                 setWaitingTimes = {setWaitingTimes}
+                                actualOperations={problem? problem.solution.operations : {}}
+                                operations={operations}
+                                setOperations = {setOperations}
                               />
               <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-x p-2 shadow-sm max-w-md mx-auto">
                 <span className="text-gray-700 text-sm font-medium">
