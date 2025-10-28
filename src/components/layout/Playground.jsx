@@ -72,7 +72,7 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
   }
   return (
     <div className='bg-blue-50'>
-      <div className='m-4 flex flex-row items-center justify-left bg-transparent'>
+      <div className='m-4 flex flex-row flex-wrap items-center justify-start bg-transparent'>
         <DropDown
           options={
             problem ? [{ label: "idle", value: -1 },
@@ -133,7 +133,7 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
 
       {/* Main content row: left = average + waiting table, right = avatar */}
       <div className="m-4">
-        <div className="flex flex-row items-start gap-6 w-full">
+        <div className="flex flex-col md:flex-row items-start gap-6 w-full">
           {/* Left column: average box + waiting time table */}
           <div className="flex flex-col flex-1 gap-3">
             <WaitingTimeTable
@@ -157,7 +157,7 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
           </div>
 
           {/* Right column: avatar */}
-          {problem && <div className="w-32 flex-shrink-0 flex items-start justify-center">
+          {problem && <div className="w-full md:w-32 flex-shrink-0 flex items-start justify-center">
             <Avatar src = {AssistantPNG} hoverSrc={AssistantGif} size={150} alt="AI Assistant" title='AI Assistant options will be added'/>
           </div>}
         </div>

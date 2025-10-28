@@ -22,7 +22,7 @@ const WaitingTimeTable = ({ processes = [], actualWaitingTimes = {}, waitingTime
 
     return (
         // constrain height so the table fits in the Playground; make vertically scrollable when content overflows
-        <div className="w-1/2 max-h-[60vh] overflow-auto bg-transparent">
+        <div className="w-full md:w-1/2 max-h-[60vh] overflow-auto bg-transparent">
             <table className="min-w-full table-fixed divide-y divide-gray-200 text-sm">
                 <thead className="bg-gray-50">
                     <tr>

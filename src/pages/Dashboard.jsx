@@ -103,17 +103,17 @@ const Dashboard = () => {
           ref={rightRef}
           style={{
             flex: 1,
-            display: "flex",
-            flexDirection: "column",
+            display: isMobile ? "block" : "flex",
+            flexDirection: isMobile ? "unset" : "column",
             minWidth: "0",
-            overflow: "hidden",
+            overflow: isMobile ? "visible" : "hidden",
           }}
         >
           <div
             style={{
               height: isMobile ? "auto" : `${topHeight}%`,
-              minHeight: isMobile ? "150px" : "50px",
-              overflow: "auto",
+              minHeight: isMobile ? "auto" : "50px",
+              overflow: isMobile ? "visible" : "auto",
             }}
             className="bg-white"
           >
@@ -138,8 +138,9 @@ const Dashboard = () => {
 
           <div
             style={{
-              flex: 1,
-              overflow: "auto",
+              height: isMobile ? "auto" : `${100 - topHeight}%`,
+              minHeight: isMobile ? "auto" : "50px",
+              overflow: isMobile ? "visible" : "auto",
             }}
             className="bg-white"
           >
