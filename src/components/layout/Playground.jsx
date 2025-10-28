@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DropDown from '@/components/ui/dropDown';
 import NumberInput from '@/components/ui/numberInput';
 import ActionButton from '@/components/ui/ActionButton';
-import { PlusCircle, Undo2, Send, CheckCircle } from "lucide-react";
+import { PlusCircle, Undo2, Send, CheckCircle, Repeat } from "lucide-react";
 import TimeLine from '../ui/timelineDrawer';
 import WaitingTimeTable from '../ui/waitingTimeTable.jsx';
 import { Avatar } from '@/components/ui/Avatar';
@@ -11,13 +11,16 @@ import AssistantPNG from "@/assets/images/assistant.png";
 import { submitSolution } from "@/services/problemService";
 import { useOverlay } from "@/context/OverlayContextCard";
 
-const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, currentProblemId, setCurrentProblemId, setShowSolution}) => {
+const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, currentProblemId, setCurrentProblemId, submitted, setSubmitted}) => {
   const [nextProcess, setNextProcess] = useState(null);
   const [nextTimeUnit, setNextTimeUnit] = useState(null);
   const [waitingTimes, setWaitingTimes] = useState({});
   const [operations, setOperations] = useState({});
   const [averageWaitingTime, setaverageWaitingTime] = useState(null);
+  const [retry, setRetry] = useState(false);
   const { showOverlay } = useOverlay();
+  const tolerance = 0.01;
+
 
   const handleAddProcess = () =>{
     const parsed = parseInt(nextTimeUnit, 10);
@@ -57,7 +60,7 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
       }
 
       if (response?.problemId) setCurrentProblemId(response.problemId);
-      setShowSolution(true);
+      setSubmitted(true);
       showOverlay(
         <div className="flex flex-col items-center space-y-2">
           <CheckCircle size={48} className="text-green-500" />
@@ -118,6 +121,20 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
           <span className="hidden sm:inline">Undo</span>
         </ActionButton>
         
+        {/* retry button */}
+        {submitted && (
+          <ActionButton
+            variant="retry"
+            onClick={() => setSubmitted(false)}
+            title="Retry your Answer"
+            className='ml-auto'
+          >
+            <Repeat size={18} />
+            <span className="hidden sm:inline">Retry</span>
+          </ActionButton>
+        )}
+        
+
         {/* submit button */}
         <ActionButton
           variant="submit"
@@ -152,11 +169,18 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
               <NumberInput
                 onSelect={setaverageWaitingTime}
                 placeholder="Total Average Waiting Time"
-                className="px-3 py-1.5 text-blue-700 font-semibold text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-right transition-all"
+                className={`px-3 py-1.5 text-blue-700 font-semibold text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-right transition-all ${
+                  submitted
+                    ? Math.abs(averageWaitingTime - problem.solution.averageWaitingTime) <= tolerance
+                      ? 'bg-green-500'
+                      : 'bg-red-500'
+                    : ''
+                }`}
                 value={averageWaitingTime}
                 allowDecimal={true}
-                decimalSeparator='.'
+                decimalSeparator="."
               />
+
             </div>
           </div>
 

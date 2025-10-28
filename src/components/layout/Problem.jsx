@@ -3,7 +3,7 @@ import ProblemViewer from "../ui/problemViewer";
 import React, { useState } from 'react';
 import { getProblem } from "@/services/problemService";
 
-const Problem = ({ problem, setProblem , setScheduledProcesses, setCurrentProblemId, setShowSolution }) => {
+const Problem = ({ problem, setProblem , setScheduledProcesses, setCurrentProblemId, setSubmitted }) => {
   const [problemType, setProblemType] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,13 +32,13 @@ const Problem = ({ problem, setProblem , setScheduledProcesses, setCurrentProble
       data['colorMap'] = colorMap;
       // store result in problem
       setProblem(data);
+      setCurrentProblemId(null);
+      setSubmitted(false);
     } catch (err) {
       console.error(err);
       setError("Failed to fetch problem. Try again.");
     } finally {
       setLoading(false);
-      setCurrentProblemId(null);
-      setShowSolution(false);
     }
   };
 

@@ -20,10 +20,10 @@ const VARIANT_STYLES = {
     base: 'bg-green-600 hover:bg-green-700',
     disabled: 'bg-green-400 cursor-not-allowed opacity-70'
   },
-  validate: {
+  retry: {
     // validation / confirm style (use indigo for contrast)
-    base: 'bg-indigo-600 hover:bg-indigo-700',
-    disabled: 'bg-indigo-400 cursor-not-allowed opacity-70'
+    base: 'bg-yellow-400 hover:bg-indigo-700',
+    disabled: 'bg-yellow-200 cursor-not-allowed opacity-70'
   }
 };
 
