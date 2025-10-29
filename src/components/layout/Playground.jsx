@@ -10,6 +10,8 @@ import AssistantGif from "@/assets/gif/assistant.gif";
 import AssistantPNG from "@/assets/images/assistant.png";
 import { submitSolution } from "@/services/problemService";
 import { useOverlay } from "@/context/OverlayContextCard";
+import OpenAI from 'openai';
+
 
 const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, currentProblemId, setCurrentProblemId, submitted, setSubmitted}) => {
   const [nextProcess, setNextProcess] = useState(null);
@@ -22,6 +24,12 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
   const tolerance = 0.01;
   const CORRECT_ANSWER_STYLE = 'bg-green-300'
   const WRONG_ANSWER_STYLE = 'bg-red-300'
+
+  const openai = new OpenAI({
+    baseURL: "https://openrouter.ai/api/v1",
+    apiKey: "",
+    dangerouslyAllowBrowser: true
+  });
 
 
   const handleAddProcess = () =>{
@@ -151,6 +159,33 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
           <Send size={18} />
           <span className="hidden sm:inline">Submit</span>
         </ActionButton>
+
+        <ActionButton
+          variant="submit"
+          onClick={async ()=>{
+            const answer = {
+              scheduledProcesses,
+              waitingTimes,
+              operations,
+              averageWaitingTime: parseFloat(averageWaitingTime),
+            };
+            const completion = await openai.chat.completions.create({
+              model: 'openai/gpt-4o',
+              messages: [
+                {
+                  role: 'user',
+                  content: "I have student who solve fcfs problem with his answer is " + JSON.stringify(answer) + "and correct answer is " + JSON.stringify(problem?.solution) + ", I want to provide him with only one single hint in simple words in short to be able to solve problem and I don't need to provide any direct answer."
+                },
+              ],
+            });
+            console.log(completion.choices[0].message);
+          }}
+          className='ml-auto'
+        >
+          <Send size={18} />
+          <span className="hidden sm:inline">openai</span>
+        </ActionButton>
+        
 
       </div>
       <TimeLine processes={scheduledProcesses} actualProcesses={problem?.solution.schedule} submitted={submitted}/>
