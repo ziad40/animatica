@@ -17,9 +17,10 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
   const [waitingTimes, setWaitingTimes] = useState({});
   const [operations, setOperations] = useState({});
   const [averageWaitingTime, setaverageWaitingTime] = useState(null);
-  const [retry, setRetry] = useState(false);
   const { showOverlay } = useOverlay();
   const tolerance = 0.01;
+  const CORRECT_ANSWER_STYLE = 'bg-green-300'
+  const WRONG_ANSWER_STYLE = 'bg-red-300'
 
 
   const handleAddProcess = () =>{
@@ -148,7 +149,7 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
         </ActionButton>
 
       </div>
-      <TimeLine processes={scheduledProcesses}/>
+      <TimeLine processes={scheduledProcesses} actualProcesses={problem?.solution.schedule} submitted={submitted}/>
 
       {/* Main content row: left = average + waiting table, right = avatar */}
       <div className="m-4">
@@ -157,10 +158,13 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
           <div className="flex flex-col flex-1 gap-3">
             <WaitingTimeTable
               processes={problem ? problem.question.processes : []}
+              actualWaitingTimes={problem?.solution.waitingTimes}
+              actualOperations={problem?.solution.operations}
               waitingTimes={waitingTimes}
               setWaitingTimes={setWaitingTimes}
               operations={operations}
               setOperations={setOperations}
+              submitted={submitted}
             />
             <div className="flex items-center bg-transparent border border-gray-200 rounded-sm p-3 shadow-sm max-w-md">
               <label htmlFor="averageWaitingTime" className="text-gray-700 text-sm font-medium mr-3">
@@ -172,8 +176,8 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
                 className={`px-3 py-1.5 text-blue-700 font-semibold text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-right transition-all ${
                   submitted
                     ? Math.abs(averageWaitingTime - problem.solution.averageWaitingTime) <= tolerance
-                      ? 'bg-green-500'
-                      : 'bg-red-500'
+                      ? CORRECT_ANSWER_STYLE
+                      : WRONG_ANSWER_STYLE
                     : ''
                 }`}
                 value={averageWaitingTime}

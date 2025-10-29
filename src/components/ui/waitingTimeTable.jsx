@@ -8,15 +8,25 @@ const WaitingTimeTable = ({
     waitingTimes,
     setWaitingTimes,
     operations,
-    setOperations
+    setOperations,
+    submitted = false,
+    solved = false,
     }) => {
-
+    const CORRECT_ANSWER_STYLE = 'bg-green-300'
+    const WRONG_ANSWER_STYLE = 'bg-red-300'
     const handleChangeWaitingTime = (pid, value) => {
-        if (value === '') return;
-        setWaitingTimes(prev => ({
-        ...prev,
-        [pid]: parseFloat(value),
-        }));
+        if (value === ''){
+            setWaitingTimes(prev => ({
+            ...prev,
+            [pid]: undefined,
+            }));
+        }else{
+            setWaitingTimes(prev => ({
+            ...prev,
+            [pid]: parseFloat(value),
+            }));
+        }
+        
     };
 
     const handleChangeOperations = (pid, value) => {
@@ -57,28 +67,41 @@ const WaitingTimeTable = ({
                     </td>
 
                     <td className="px-2 py-1 text-sm text-gray-700">
-                    {actualOperations[pid] !== undefined ? (
+                    {solved && actualOperations[pid] !== undefined ? (
                         <span className="block truncate">{actualOperations[pid]}</span>
                     ) : (
                         <input
-                        type="text"
-                        value={operations[pid] ?? ""}
-                        onChange={(e) => handleChangeOperations(pid, e.target.value)}
-                        placeholder={`P${pid} calc`}
-                        className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            type="text"
+                            value={operations[pid] ?? ""}
+                            onChange={(e) => handleChangeOperations(pid, e.target.value)}
+                            placeholder={`P${pid} calc`}
+                            className={`w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                            submitted
+                                ? actualOperations[pid] === operations[pid]
+                                ? CORRECT_ANSWER_STYLE
+                                : WRONG_ANSWER_STYLE
+                                : ''
+                            }`}
                         />
                     )}
+                    
                     </td>
 
                     <td className="px-2 py-1 text-sm text-gray-700">
-                    {actualWaitingTimes[pid] !== undefined ? (
+                    {solved && actualWaitingTimes[pid] !== undefined ? (
                         <span>{actualWaitingTimes[pid]}</span>
                     ) : (
                         <NumberInput
-                        className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        onSelect={(value) => handleChangeWaitingTime(pid, value)}
-                        value={waitingTimes[pid] ?? ''}
-                        placeholder={`P${pid} WT`}
+                            className={`w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                            submitted
+                                ? actualWaitingTimes[pid] === waitingTimes[pid]
+                                ? CORRECT_ANSWER_STYLE
+                                : WRONG_ANSWER_STYLE
+                                : ''
+                            }`}
+                            onSelect={(value) => handleChangeWaitingTime(pid, value)}
+                            value={waitingTimes[pid] ?? ''}
+                            placeholder={`P${pid} WT`}
                         />
                     )}
                     </td>

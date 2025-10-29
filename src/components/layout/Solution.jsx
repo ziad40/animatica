@@ -28,6 +28,7 @@ const Solution = ({ problem }) => {
                                 actualOperations={problem? problem.solution.operations : {}}
                                 operations={operations}
                                 setOperations = {setOperations}
+                                solved={true}
                               />
               <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-x p-2 shadow-sm max-w-md mx-auto">
                 <span className="text-gray-700 text-sm font-medium">

@@ -1,12 +1,52 @@
 import React from "react";
 
 // component that have scheduledProcesses to draw represent them in time line
-const TimeLine = ({ processes = [], colorMap = {} }) => {
+const TimeLine = ({ processes = [], colorMap = {} , actualProcesses = [], submitted = false}) => {
   // defensive: ensure processes is an array
   const totalUnitTime = processes.reduce((sum, p) => sum + (Number(p.timeUnits) || 0), 0);
 
   // If totalUnitTime is 0, each item will get 0% width — we fall back to an equal distribution
   const fallbackWidth = processes.length > 0 ? 100 / processes.length : 100;
+  const CORRECT_ANSWER_STYLE = '#86efac';
+  const WRONG_ANSWER_STYLE = '#fca5a5';
+
+  const getBackgroundColor = ({
+    idx,
+    process,
+  }) => {
+    // If not submitted or no actualProcesses, use colorMap (if provided)
+    if (!submitted || !actualProcesses || actualProcesses.length === 0) {
+      return colorMap && process?.processId !== -1
+        ? colorMap[process.processId] || '#9CA3AF'
+        : undefined;
+    }
+    const actual = actualProcesses[idx];
+    const isMatch =
+      actual?.processId === process?.processId &&
+      actual?.timeUnits === process?.timeUnits;
+
+    return isMatch ? CORRECT_ANSWER_STYLE : WRONG_ANSWER_STYLE;
+  };
+
+  const ProcessItem = ({ idx, process, totalUnitTime, fallbackWidth, colorMap = null }) => {
+    const units = Number(process?.timeUnits) || 0;
+    const pct = totalUnitTime > 0 ? (units / totalUnitTime) * 100 : fallbackWidth;
+    const label = process?.processId != null && process.processId !== -1 ? `P${process.processId}` : 'idle';
+
+    return (
+      <div
+        role="listitem"
+        className="border-2 border-solid flex items-center justify-center px-2 text-sm bg-gray-50 h-1/2"
+        // only set inline backgroundColor when a colorMap is provided; otherwise keep the tailwind bg-gray-50
+        style={{ width: `${pct}%`,
+          backgroundColor : getBackgroundColor({ idx, process})
+        }}
+        title={`${label} — ${units} unit${units !== 1 ? 's' : ''}`}
+      >
+        {label}
+      </div>
+    );
+  };
 
   return (
     // use nowrap + overflow so the timeline stays a single horizontal bar and items don't push layout
@@ -14,7 +54,8 @@ const TimeLine = ({ processes = [], colorMap = {} }) => {
       <div className="flex flex-row flex-nowrap items-stretch" role="list" aria-label="timeline" title="Processes Time Line">
         {processes.map((p, idx) => (
           <ProcessItem
-            key={idx}
+            key = {idx}
+            idx = {idx}
             process={p}
             totalUnitTime={totalUnitTime}
             fallbackWidth={fallbackWidth}
@@ -51,24 +92,6 @@ const TimeLine = ({ processes = [], colorMap = {} }) => {
       ) : (
         <div className="mt-2 text-xs text-gray-500">No scheduledProcesses</div>
       )}
-    </div>
-  );
-};
-
-const ProcessItem = ({ process, totalUnitTime, fallbackWidth, colorMap = null }) => {
-  const units = Number(process?.timeUnits) || 0;
-  const pct = totalUnitTime > 0 ? (units / totalUnitTime) * 100 : fallbackWidth;
-  const label = process?.processId != null && process.processId !== -1 ? `P${process.processId}` : 'idle';
-
-  return (
-    <div
-      role="listitem"
-      className="border-2 border-solid flex items-center justify-center px-2 text-sm bg-gray-50 h-1/2"
-      // only set inline backgroundColor when a colorMap is provided; otherwise keep the tailwind bg-gray-50
-      style={{ width: `${pct}%`, backgroundColor: colorMap && process?.processId !== -1 ? (colorMap[process.processId] || '#9CA3AF') : undefined }}
-      title={`${label} — ${units} unit${units !== 1 ? 's' : ''}`}
-    >
-      {label}
     </div>
   );
 };
