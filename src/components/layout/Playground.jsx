@@ -67,6 +67,7 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
       setSubmitted(true);
       showOverlay(
         <div className="flex flex-col items-center space-y-2">
+          <Avatar src = {AssistantGif} size={300} alt="AI Assistant" />
           <CheckCircle size={48} className="text-green-500" />
           <h2 className="text-xl font-semibold">Good Trial</h2>
           <p className="text-gray-600">Your solution has been recorded!</p>
