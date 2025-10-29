@@ -13,7 +13,8 @@ import { useOverlay } from "@/context/OverlayContextCard";
 
 const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, currentProblemId, setCurrentProblemId, submitted, setSubmitted}) => {
   const [nextProcess, setNextProcess] = useState(null);
-  const [nextTimeUnit, setNextTimeUnit] = useState(null);
+  const [nextEndTimeUnit, setNextEndTimeUnit] = useState(null);
+  const [currentTime, setCurrentTime] = useState([0]);
   const [waitingTimes, setWaitingTimes] = useState({});
   const [operations, setOperations] = useState({});
   const [averageWaitingTime, setaverageWaitingTime] = useState(null);
@@ -24,23 +25,25 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
 
 
   const handleAddProcess = () =>{
-    const parsed = parseInt(nextTimeUnit, 10);
-    if (nextProcess !== null && !Number.isNaN(parsed)) {
+    const parsed = parseInt(nextEndTimeUnit, 10);
+    if (nextProcess !== null && !Number.isNaN(parsed) && parsed > currentTime[currentTime.length-1]) {
       const newScheduled = [
         ...scheduledProcesses,
-        { processId: nextProcess, timeUnits: parsed },
+        { processId: nextProcess, timeUnits: parsed - currentTime[currentTime.length-1] },
       ];
       setScheduledProcesses(newScheduled);
-      // log the new array (no async surprise)
-      // optionally reset selection
+      // reset selection
       setNextProcess(null);
-      setNextTimeUnit(null);
+      setNextEndTimeUnit(null);
+      setCurrentTime (prev => [...prev, parsed]);
     }
   }
   const handleUndo = () =>{
     if (scheduledProcesses.length > 0){
         const newScheduled = scheduledProcesses.slice(0, -1);
         setScheduledProcesses(newScheduled);
+        const newCurrentTime = currentTime.slice(0, -1);
+        setCurrentTime(newCurrentTime);
     }
   }
 
@@ -94,16 +97,16 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
         />
         <NumberInput
           onSelect={(value) => {
-            setNextTimeUnit(value);
+            setNextEndTimeUnit(value);
           }}
-          value={nextTimeUnit ?? ''}
-          placeholder="Time Units to Schedule"
+          value={nextEndTimeUnit ?? ''}
+          placeholder="End Time of Process"
         />
 
         {/* Add button - compute new array first so console shows updated value immediately */}
         <ActionButton
           variant="green"
-          disabled={nextProcess === null || nextTimeUnit === null || nextTimeUnit === '' || Number.isNaN(parseInt(nextTimeUnit, 10))}
+          disabled={nextProcess === null || nextEndTimeUnit === null || nextEndTimeUnit === '' || Number.isNaN(parseInt(nextEndTimeUnit, 10)) || parseInt(nextEndTimeUnit, 10) <= currentTime[currentTime.length-1]}
           onClick={handleAddProcess}
           title="Add next process"
         >
