@@ -1,12 +1,15 @@
 import TimeLine from '../ui/timelineDrawer';
 import WaitingTimeTable from '../ui/waitingTimeTable.jsx';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ActionButton from '../ui/ActionButton';
 
 const Solution = ({ problem }) => {
   const [waitingTimes, setWaitingTimes] = useState({});
   const [operations, setOperations] = useState({});
   const [showSolution, setShowSolution] = useState(false);
+  useEffect(() => {
+      setShowSolution(false);
+    }, [problem]);
   return (
     <>
     {

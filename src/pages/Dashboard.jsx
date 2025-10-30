@@ -5,9 +5,6 @@ import Solution from "@/components/layout/Solution";
 
 const Dashboard = () => {
   const [problem, setProblem] = useState(null);
-  const [scheduledProcesses, setScheduledProcesses] = useState([]);
-  const [currentProblemId, setCurrentProblemId] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
 
   // left column width in percent (0-100)
   const [leftWidth, setLeftWidth] = useState(40);
@@ -82,7 +79,7 @@ const Dashboard = () => {
           }}
           className="border-r border-gray-200 bg-white"
         >
-          <Problem problem = {problem} setProblem={setProblem} setScheduledProcesses = {setScheduledProcesses} setCurrentProblemId = {setCurrentProblemId} setSubmitted={setSubmitted}/>
+          <Problem problem = {problem} setProblem={setProblem}/>
         </div>
 
         {/* Vertical splitter - hidden on mobile */}
@@ -117,11 +114,7 @@ const Dashboard = () => {
             }}
             className="bg-blue-50"
           >
-            <Playground problem = {problem} scheduledProcesses = {scheduledProcesses}
-            setScheduledProcesses = {setScheduledProcesses} 
-            currentProblemId = {currentProblemId} setCurrentProblemId = {setCurrentProblemId}
-            submitted={submitted} setSubmitted={setSubmitted}
-            />
+            <Playground problem = {problem} />
           </div>
 
           {/* Horizontal splitter - hidden on mobile */}

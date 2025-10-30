@@ -3,7 +3,7 @@ import ProblemViewer from "../ui/problemViewer";
 import React, { useState } from 'react';
 import { getProblem } from "@/services/problemService";
 
-const Problem = ({ problem, setProblem , setScheduledProcesses, setCurrentProblemId, setSubmitted }) => {
+const Problem = ({ problem, setProblem }) => {
   const [problemType, setProblemType] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,6 @@ const Problem = ({ problem, setProblem , setScheduledProcesses, setCurrentProble
   }
   const handleGenerate = async () => {
     setError("");
-    setScheduledProcesses([]); // reset scheduled processes on new problem
     if (!problemType) {
       setError("Please choose a problem type before generating.");
       return;
@@ -32,8 +31,6 @@ const Problem = ({ problem, setProblem , setScheduledProcesses, setCurrentProble
       data['colorMap'] = colorMap;
       // store result in problem
       setProblem(data);
-      setCurrentProblemId(null);
-      setSubmitted(false);
     } catch (err) {
       console.error(err);
       setError("Failed to fetch problem. Try again.");

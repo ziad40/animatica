@@ -77,7 +77,7 @@ const WaitingTimeTable = ({
                             placeholder={`P${pid} calc`}
                             className={`w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 ${
                             submitted
-                                ? String(actualOperations[pid]).trim() === String(operations[pid]).trim() || (actualOperations[pid] === '0-0' && String(operations[pid]).trim() === '0')
+                                ? String(actualOperations[pid]).replace(/\s+/g, '') === String(operations[pid]).replace(/\s+/g, '') || (actualOperations[pid] === '0-0' && String(operations[pid]).replace(/\s+/g, '') === '0')
                                 ? CORRECT_ANSWER_STYLE
                                 : WRONG_ANSWER_STYLE
                                 : ''

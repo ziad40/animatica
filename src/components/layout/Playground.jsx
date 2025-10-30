@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DropDown from '@/components/ui/dropDown';
 import NumberInput from '@/components/ui/numberInput';
 import ActionButton from '@/components/ui/ActionButton';
 import { PlusCircle, Undo2, Send, CheckCircle, Repeat } from "lucide-react";
+import Avatar from '../ui/Avatar';
+import AssistantGif from "@/assets/gif/assistant.gif";
 import TimeLine from '../ui/timelineDrawer';
 import WaitingTimeTable from '../ui/waitingTimeTable.jsx';
-import { Avatar } from '@/components/ui/Avatar';
-import AssistantGif from "@/assets/gif/assistant.gif";
-import AssistantPNG from "@/assets/images/assistant.png";
 import { submitSolution } from "@/services/problemService";
 import { useOverlay } from "@/context/OverlayContextCard";
-import OpenAI from 'openai';
+import { Assistant } from '../ui/Assistant';
 
-
-const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, currentProblemId, setCurrentProblemId, submitted, setSubmitted}) => {
+const Playground = ({ problem }) => {
+  const [scheduledProcesses, setScheduledProcesses] = useState([]);
+  const [currentProblemId, setCurrentProblemId] = useState(null);
+  const [submitted, setSubmitted] = useState(false);                     
   const [nextProcess, setNextProcess] = useState(null);
   const [nextEndTimeUnit, setNextEndTimeUnit] = useState(null);
   const [currentTime, setCurrentTime] = useState([0]);
@@ -25,12 +26,17 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
   const CORRECT_ANSWER_STYLE = 'bg-green-300'
   const WRONG_ANSWER_STYLE = 'bg-red-300'
 
-  const openai = new OpenAI({
-    baseURL: "https://openrouter.ai/api/v1",
-    apiKey: "",
-    dangerouslyAllowBrowser: true
-  });
-
+  useEffect(() => {
+    setScheduledProcesses([]);
+    setCurrentProblemId(null);
+    setSubmitted(false);
+    setNextProcess(null);
+    setNextEndTimeUnit(null);
+    setCurrentTime([0]);
+    setWaitingTimes({});
+    setOperations({});
+    setaverageWaitingTime(null);
+  }, [problem]);
 
   const handleAddProcess = () =>{
     const parsed = parseInt(nextEndTimeUnit, 10);
@@ -73,6 +79,11 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
 
       if (response?.problemId) setCurrentProblemId(response.problemId);
       setSubmitted(true);
+      return response;
+    } catch (err) {
+      console.error('Failed to submit solution from Playground:', err);
+      throw err;
+    } finally{
       showOverlay(
         <div className="flex flex-col items-center space-y-2">
           <Avatar src = {AssistantGif} size={300} alt="AI Assistant" />
@@ -82,10 +93,6 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
         </div>,
         3000 // show for 3 seconds
       );
-      return response;
-    } catch (err) {
-      console.error('Failed to submit solution from Playground:', err);
-      throw err;
     }
   }
   return (
@@ -160,33 +167,6 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
           <span className="hidden sm:inline">Submit</span>
         </ActionButton>
 
-        <ActionButton
-          variant="submit"
-          onClick={async ()=>{
-            const answer = {
-              scheduledProcesses,
-              waitingTimes,
-              operations,
-              averageWaitingTime: parseFloat(averageWaitingTime),
-            };
-            const completion = await openai.chat.completions.create({
-              model: 'openai/gpt-4o',
-              messages: [
-                {
-                  role: 'user',
-                  content: "I have student who solve fcfs problem with his answer is " + JSON.stringify(answer) + "and correct answer is " + JSON.stringify(problem?.solution) + ", I want to provide him with only one single hint in simple words in short to be able to solve problem and I don't need to provide any direct answer."
-                },
-              ],
-            });
-            console.log(completion.choices[0].message);
-          }}
-          className='ml-auto'
-        >
-          <Send size={18} />
-          <span className="hidden sm:inline">openai</span>
-        </ActionButton>
-        
-
       </div>
       <TimeLine processes={scheduledProcesses} actualProcesses={problem?.solution.schedule} submitted={submitted}/>
 
@@ -229,7 +209,13 @@ const Playground = ({ problem , scheduledProcesses, setScheduledProcesses, curre
 
           {/* Right column: avatar */}
           {problem && <div className="w-full md:w-32 flex-shrink-0 flex items-start justify-center">
-            <Avatar src = {AssistantPNG} hoverSrc={AssistantGif} size={150} alt="AI Assistant" title='AI Assistant options will be added'/>
+            <Assistant 
+              problem = {problem}
+              scheduledProcesses = {scheduledProcesses}
+              waitingTimes={waitingTimes}
+              operations={operations}
+              averageWaitingTime={averageWaitingTime}
+            />
           </div>}
         </div>
       </div>
