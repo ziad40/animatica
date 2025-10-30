@@ -97,7 +97,7 @@ export const Assistant = ({
             {/* Hint display area */}
             {hint && (
                 <div
-                    className="mt-6 max-w-[250px] bg-blue-50 border border-blue-200 text-gray-800 text-sm p-3 rounded-lg shadow-sm transition-all duration-300 animate-fadeIn"
+                    className="mt-6 w-auto bg-blue-50 border border-blue-200 text-gray-800 text-sm p-3 rounded-lg shadow-sm transition-all duration-300 animate-fadeIn"
                     style={{ textAlign: "center", whiteSpace: "pre-line" }}
                 >
                 💡 {hint}
