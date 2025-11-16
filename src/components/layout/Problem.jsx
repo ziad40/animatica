@@ -3,7 +3,7 @@ import ProblemViewer from "../ui/problemViewer";
 import React, { useState } from 'react';
 import { getProblem } from "@/services/problemService";
 
-const Problem = ({ problem, setProblem }) => {
+const Problem = ({ problem, setProblem, threeDMode, setThreeDMode }) => {
   const [problemType, setProblemType] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -38,9 +38,19 @@ const Problem = ({ problem, setProblem }) => {
       setLoading(false);
     }
   };
+  const toggleMode = () => {
+    setThreeDMode(prev => !prev);
+  };
 
   return (
     <div className="flex flex-col items-center h-full p-4 bg-white rounded shadow">
+      {/* Toggle Button */}
+      <button
+        onClick={toggleMode}
+        className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+      >
+        {threeDMode ? "Switch to 2D" : "Switch to 3D"}
+      </button>
       <DropDown
         options={[
           { label: "First Come First Serve", value: "FCFS" },
