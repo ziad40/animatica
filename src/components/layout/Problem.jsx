@@ -2,6 +2,8 @@ import DropDown from "../ui/dropDown";
 import ProblemViewer from "../ui/problemViewer";
 import React, { useState } from 'react';
 import { getProblem } from "@/services/problemService";
+import Switcher from "../ui/switch";
+
 
 const Problem = ({ problem, setProblem, threeDMode, setThreeDMode }) => {
   const [problemType, setProblemType] = useState("");
@@ -38,33 +40,36 @@ const Problem = ({ problem, setProblem, threeDMode, setThreeDMode }) => {
       setLoading(false);
     }
   };
-  const toggleMode = () => {
-    setThreeDMode(prev => !prev);
-  };
 
   return (
     <div className="flex flex-col items-center h-full p-4 bg-white rounded shadow">
-      {/* Toggle Button */}
-      <button
-        onClick={toggleMode}
-        className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
-      >
-        {threeDMode ? "Switch to 2D" : "Switch to 3D"}
-      </button>
-      <DropDown
-        options={[
-          { label: "First Come First Serve", value: "FCFS" },
-        ]}
-        selectedValue={problemType}
-        onSelect={(value) => {
-          setProblemType(value.value);
-        }}
-        className="m-4 w-full"
-        buttonClassName="w-full text-left"
-        placeholder="Choose Scheduling Algorithm"
-      />
+      <div className="w-full flex flex-row items-center justify-between">
+        <div></div>
+        <div className="flex flex-col items-center mr-4">
+          <DropDown
+            options={[
+              { label: "First Come First Serve", value: "FCFS" },
+            ]}
+            selectedValue={problemType}
+            onSelect={(value) => {
+              setProblemType(value.value);
+            }}
+            className="m-4 w-full"
+            buttonClassName="w-full text-left"
+            placeholder="Choose Scheduling Algorithm"
+          />
 
-      {error && <div className="text-sm text-red-600 mt-2">{error}</div>}
+          {error && <div className="text-sm text-red-600 mt-2">{error}</div>}
+        </div>
+        
+        {/* Toggle Button */}
+        <div>
+          <Switcher setThreeDMode={setThreeDMode}/>
+          3D Mode
+        </div>
+        
+      </div>
+      
 
       <button
         onClick={handleGenerate}
