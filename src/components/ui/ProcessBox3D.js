@@ -52,7 +52,7 @@ export default class ProcessBox3D {
 
   // // Example method: rotate box every frame
   update() {
-    // this.mesh.rotation.x += this.rotationSpeed.x;
+    this.mesh.rotation.x += this.rotationSpeed.x;
     // this.mesh.rotation.y += this.rotationSpeed.y;
   }
 
@@ -77,7 +77,7 @@ export default class ProcessBox3D {
   }
 }
 
-function createColorTextTexture(text, textColor, bgColor, size= 512) {
+function createColorTextTexture(text, textColor, bgColor, size = 512) {
   const canvas = document.createElement("canvas");
   canvas.width = size;
   canvas.height = size;
@@ -87,21 +87,33 @@ function createColorTextTexture(text, textColor, bgColor, size= 512) {
   ctx.fillStyle = bgColor;
   ctx.fillRect(0, 0, size, size);
 
-  // --- FIXED text size (not stretching) ---
-  const fontSize = size * 0.9; // 25% of canvas height
-  ctx.font = `bold ${size}px Arial`;
+  // --- FIXED text height ---
+  // change multiplier (0.1 → small text, 0.9 → large text)
+  const fontSize = size * 0.2;
+  ctx.font = `bold ${fontSize}px Arial`;
+
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillStyle = textColor;
 
-  ctx.fillText(text, size / 2, size / 2, size * 0.25); // no maxWidth → sharp
+   // --- MULTI-LINE SUPPORT ---
+  const lines = text.split("\n");
+
+  const totalHeight = fontSize * lines.length;
+
+  let y = size / 2 - totalHeight / 2 + fontSize / 2;
+
+  for (const line of lines) {
+    ctx.fillText(line, size / 2, y);
+    y += fontSize;
+  }
 
   const texture = new THREE.CanvasTexture(canvas);
 
-  // important: reduce blur
-  texture.anisotropy = 100; // high-quality texture
-
+  texture.anisotropy = 16; // improves sharpness
   texture.needsUpdate = true;
+
   return texture;
 }
+
 
