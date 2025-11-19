@@ -2,7 +2,6 @@ import  { useRef, useState, useEffect } from "react";
 import Playground from "./Playground";
 import Solution from "./Solution";
 
-// Interactive component wraps Playground (top) and Solution (bottom) with a horizontal splitter
 const TwoDInteractive = ({ problem, isMobile }) => {
   const [topHeight, setTopHeight] = useState(60);
   const rightRef = useRef(null);
@@ -33,6 +32,7 @@ const TwoDInteractive = ({ problem, isMobile }) => {
 
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mouseup", onMouseUp);
+
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
@@ -40,50 +40,34 @@ const TwoDInteractive = ({ problem, isMobile }) => {
   }, []);
 
   return (
-    <div
-      ref={rightRef}
-      style={{
-        flex: 1,
-        display: isMobile ? "block" : "flex",
-        flexDirection: isMobile ? "unset" : "column",
-        minWidth: "0",
-        overflow: isMobile ? "visible" : "hidden",
-      }}
-    >
-      {/* Playground (top) */}
+    <div ref={rightRef} className="flex flex-col flex-1 min-w-0 h-full">
       <div
         style={{
           height: isMobile ? "auto" : `${topHeight}%`,
-          minHeight: isMobile ? "auto" : "50px",
-          overflow: isMobile ? "visible" : "auto",
         }}
-        className="bg-blue-50"
+        className="bg-blue-50 overflow-auto"
       >
         <Playground problem={problem} />
       </div>
 
-      {/* Horizontal splitter - hidden on mobile */}
       {!isMobile && (
         <div
           onMouseDown={handleMouseDown}
           className="h-1 cursor-row-resize bg-transparent hover:bg-gray-200"
-          style={{ cursor: "row-resize" }}
         />
       )}
 
-      {/* Solution (bottom) */}
       <div
         style={{
           height: isMobile ? "auto" : `${100 - topHeight}%`,
-          minHeight: isMobile ? "auto" : "50px",
-          overflow: isMobile ? "visible" : "auto",
         }}
-        className="bg-green-50"
+        className="bg-green-50 flex-1"
       >
         <Solution problem={problem} />
       </div>
     </div>
   );
 };
+
 
 export default TwoDInteractive;

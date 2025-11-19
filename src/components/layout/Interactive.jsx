@@ -11,7 +11,7 @@ const Interactive = ({ problem, isMobile, threeDMode }) => {
   }, [threeDMode]);
 
   return (
-    <>
+    <div className="h-full">
       {/* 2D */}
       <div className={`${threeDMode ? "hidden" : "block"} w-full h-full flex-1 min-w-0`}>
         <TwoDInteractive problem={problem} isMobile={isMobile} />
@@ -23,7 +23,7 @@ const Interactive = ({ problem, isMobile, threeDMode }) => {
           <ThreeDInteractive problem={problem} threeDMode={threeDMode}/>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
