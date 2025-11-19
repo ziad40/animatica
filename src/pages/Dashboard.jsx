@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import Playground from "@/components/layout/Playground";
 import Problem from "@/components/layout/Problem";
-import Solution from "@/components/layout/Solution";
+import Interactive from "@/components/layout/Interactive";
 
 const Dashboard = () => {
   const [problem, setProblem] = useState(null);
-
+  const [threeDMode, setThreeDMode] = useState(false);
   // left column width in percent (0-100)
   const [leftWidth, setLeftWidth] = useState(40);
   // top area height in percent inside right column
@@ -79,7 +78,7 @@ const Dashboard = () => {
           }}
           className="border-r border-gray-200 bg-white"
         >
-          <Problem problem = {problem} setProblem={setProblem}/>
+          <Problem problem = {problem} setProblem={setProblem} threeDMode={threeDMode} setThreeDMode={setThreeDMode}/>
         </div>
 
         {/* Vertical splitter - hidden on mobile */}
@@ -95,51 +94,9 @@ const Dashboard = () => {
           />
         )}
 
-        {/* RIGHT: playground top / solution bottom */}
-        <div
-          ref={rightRef}
-          style={{
-            flex: 1,
-            display: isMobile ? "block" : "flex",
-            flexDirection: isMobile ? "unset" : "column",
-            minWidth: "0",
-            overflow: isMobile ? "visible" : "hidden",
-          }}
-        >
-          <div
-            style={{
-              height: isMobile ? "auto" : `${topHeight}%`,
-              minHeight: isMobile ? "auto" : "50px",
-              overflow: isMobile ? "visible" : "auto",
-            }}
-            className="bg-blue-50"
-          >
-            <Playground problem = {problem} />
-          </div>
-
-          {/* Horizontal splitter - hidden on mobile */}
-          {!isMobile && (
-            <div
-              onMouseDown={() => {
-                isDraggingH.current = true;
-                document.body.style.cursor = "row-resize";
-                document.body.style.userSelect = "none";
-              }}
-              className="h-1 cursor-row-resize bg-transparent hover:bg-gray-200"
-              style={{ cursor: "row-resize" }}
-            />
-          )}
-
-          <div
-            style={{
-              height: isMobile ? "auto" : `${100 - topHeight}%`,
-              minHeight: isMobile ? "auto" : "50px",
-              overflow: isMobile ? "visible" : "auto",
-            }}
-            className='bg-green-50'
-          >
-            <Solution problem = {problem}/>
-          </div>
+        {/* RIGHT: Interactive (Playground + Solution with splitter / 3D) */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <Interactive problem={problem} isMobile={isMobile} threeDMode={threeDMode} />
         </div>
       </div>
     </div>
