@@ -16,6 +16,9 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
   const startXPos = 0;
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
+  const currentBoxIndexRef = useRef(0);
+  const creatingRef = useRef(false);
+
 
   useEffect(() => {
     if (!threeDMode) return; 
@@ -111,12 +114,55 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
     container.addEventListener("touchmove", onTouchMove, { passive: false });
     container.addEventListener("touchend", onTouchEnd);
 
+    function maybeCreateNextBox() {
+      const boxes = boxesRef.current;
+
+      // If no boxes, nothing to do
+      if (!boxes || boxes.length === 0) return;
+
+      // If current index beyond available boxes -> stop
+      if (currentBoxIndexRef.current >= boxes.length) return;
+
+      // If current box not initialized yet, initialize it and return (so update runs after init)
+      const current = boxes[currentBoxIndexRef.current];
+      if (!current.initialized) {
+        current.initialize();
+        current.initialized = true;
+        return;
+      }
+
+      // If any of the boxes up to current index are not final, do not proceed to next
+      for (let i = 0; i <= currentBoxIndexRef.current; i++) {
+        if (!boxes[i].isFinalState()) {
+          return;
+        }
+      }
+
+      // All previous up to current are final -> move to next (if exists)
+      const next = currentBoxIndexRef.current + 1;
+      if (next < boxes.length) {
+        boxes[next].initialize();
+        boxes[next].initialized = true;
+        currentBoxIndexRef.current = next;
+      }
+    }
+
+
     // --- Animation Loop ---
     function animate() {
       requestAnimationFrame(animate);
 
+      // First, ensure next box gets initialized (so update() uses correct initial position)
+      maybeCreateNextBox();
+
       // Smooth zoom
       camera.position.y += (targetY - camera.position.y) * 0.1;
+      const boxes = boxesRef.current;
+
+      // Only update boxes up to current index
+      for (let i = 0; i <= currentBoxIndexRef.current; i++) {
+        boxes[i]?.update();
+      }
 
       renderer.render(scene, camera);
     }
@@ -135,6 +181,8 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
   }, []);
 
   useEffect(() => {
+    currentBoxIndexRef.current = 0;
+    creatingRef.current = false;
     const scene = sceneRef.current;
     if (!scene || !problem) return;
 
@@ -155,7 +203,7 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
         burstTime: item.burstTime,
       };
     }
-    for (let i = 0; i < problem.solution.schedule.length; i++) {
+    for (let i = 0; i < problem.solution.schedule.length && threeDMode; i++) {
       const item = problem.solution.schedule[i];
       const h = item.timeUnits;
       // Center of this box = previousTop + (h / 2)
@@ -166,12 +214,14 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
         depth:1,
         id: item.processId,
         color: problem.colorMap[item.processId],
-        position: { x: startXPos, y: centerY, z: zdis },
-        text: item.processId !== -1 ? `P${item.processId}\nA:${processes[item.processId].arrivalTime} B:${processes[item.processId].burstTime}` : 'idle',
-        // textColor: problem.colorMap[item.processId]
+        position: { x: 999, y: 999, z: 999 },
+        initialState: { x: startXPos+20, y: minY+15, z: zdis },
+        targetState: { x: startXPos, y: centerY, z: zdis },
+        text: 
+          item.processId !== -1 ? `P${item.processId}\nA:${processes[item.processId].arrivalTime} B:${processes[item.processId].burstTime}` 
+          : 'idle',
       });
       currentTop += h+0.1;
-      // zdis -= 1;
       scene.add(box.mesh);
       boxesRef.current.push(box);
     }

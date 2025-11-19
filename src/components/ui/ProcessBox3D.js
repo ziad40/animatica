@@ -7,6 +7,8 @@ export default class ProcessBox3D {
     depth = 1,
     color = 0xff0000,
     position = { x: 0, y: 0, z: 0 },
+    initialState = { x: 0, y: 0, z: 0 },
+    targetState = { x: 0, y: 0, z: 0 },
     id = null,
     text = null,
     textColor = "#000000",
@@ -17,7 +19,12 @@ export default class ProcessBox3D {
     this.height = height;
     this.depth = depth;
     this.color = color;
-    
+    this.targetState = targetState;
+    this.initialState = initialState;
+    this.speed = {x:0, y:0, z:0};
+    this.setSpeed = false;
+    this.initialized = false;
+
     // Create mesh
     this.geometry = new THREE.BoxGeometry(width, height, depth);
 
@@ -52,19 +59,40 @@ export default class ProcessBox3D {
 
   // // Example method: rotate box every frame
   update() {
-    this.mesh.rotation.x += this.rotationSpeed.x;
-    // this.mesh.rotation.y += this.rotationSpeed.y;
+    const pos = this.mesh.position;
+    if (!this.setSpeed ){
+      this.speed.x = (this.targetState.x - pos.x) /500;
+      this.speed.y = (this.targetState.y - pos.y) /500;
+      this.speed.z = (this.targetState.z - pos.z) /500;
+      this.setSpeed = true;
+    }
+    if (!this.isFinalState()){
+      pos.x += this.speed.x;
+      pos.y += this.speed.y;
+      pos.z += this.speed.z;
+    }
   }
 
-  // // Example: change color dynamically
-  // setColor(newColor) {
-  //   this.material.color.set(newColor);
-  // }
+  isFinalState() {
+    const pos = this.mesh.position;
+    return (
+      Math.abs(pos.x - this.targetState.x) <= 0.01  &&
+      Math.abs(pos.y - this.targetState.y) <= 0.01 &&
+      Math.abs(pos.z - this.targetState.z) <= 0.01
+    );
+  }
 
-  // // Example: move box
-  // moveTo(x, y, z) {
-  //   this.mesh.position.set(x, y, z);
-  // }
+  initialize(){
+    this.mesh.position.set(
+      this.initialState.x,
+      this.initialState.y,
+      this.initialState.z
+    );
+  }
+
+  moveTo(x, y, z) {
+    this.mesh.position.set(x, y, z);
+  }
 
   // Cleanup
   dispose() {
