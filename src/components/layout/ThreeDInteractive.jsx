@@ -18,7 +18,9 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
   const cameraRef = useRef(null);
   const currentBoxIndexRef = useRef(0);
   const creatingRef = useRef(false);
-
+  const currentHoldingBoxIndex = useRef(-1);
+  const raycasterRef = useRef(new THREE.Raycaster());
+  const pointerDragRef = useRef({ box: null, offset: new THREE.Vector3(), plane: null });
 
   useEffect(() => {
     if (!threeDMode) return; 
@@ -108,11 +110,67 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
       isPinching = false;
     }
 
+    function getMouseNDC(event) {
+      const rect = renderer.domElement.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      return { x, y, rect };
+    }
+
+    function onPointerDown(e) {
+      const rc = raycasterRef.current;
+      const ndc = getMouseNDC(e);
+      rc.setFromCamera({ x: ndc.x, y: ndc.y }, camera);
+
+      const meshes = boxesRef.current.map((b) => b.mesh);
+      const intersects = rc.intersectObjects(meshes, false);
+      if (!intersects || intersects.length === 0) return;
+
+      const mesh = intersects[0].object;
+      const box = boxesRef.current.find((b) => b.mesh === mesh);
+      if (!box) return;
+
+      // plane at box z (parallel to XY)
+      const plane = new THREE.Plane();
+      plane.setFromNormalAndCoplanarPoint(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, box.mesh.position.z));
+
+      const hitPoint = new THREE.Vector3();
+      rc.ray.intersectPlane(plane, hitPoint);
+      const offset = new THREE.Vector3().subVectors(box.mesh.position, hitPoint);
+
+      pointerDragRef.current = { box, offset, plane };
+      // prevent default browser drag
+      e.preventDefault();
+    }
+
+    function onPointerMove(e) {
+      const sel = pointerDragRef.current;
+      if (!sel || !sel.box) return;
+      const rc = raycasterRef.current;
+      const ndc = getMouseNDC(e);
+      rc.setFromCamera({ x: ndc.x, y: ndc.y }, camera);
+      const hitPoint = new THREE.Vector3();
+      rc.ray.intersectPlane(sel.plane, hitPoint);
+      if (!hitPoint) return;
+      const target = new THREE.Vector3().addVectors(hitPoint, sel.offset);
+      sel.box.moveTo(target.x, target.y, sel.box.mesh.position.z);
+    }
+
+    function onPointerUp() {
+      pointerDragRef.current = { box: null, offset: new THREE.Vector3(), plane: null };
+    }
+    
+
     // ---- Add event listeners ---
     container.addEventListener("wheel", onWheel, { passive: false });
     container.addEventListener("touchstart", onTouchStart);
     container.addEventListener("touchmove", onTouchMove, { passive: false });
     container.addEventListener("touchend", onTouchEnd);
+    // pointer-based drag
+    renderer.domElement.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+
 
     function maybeCreateNextBox() {
       const boxes = boxesRef.current;
@@ -175,6 +233,10 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
       container.removeEventListener("touchstart", onTouchStart);
       container.removeEventListener("touchmove", onTouchMove);
       container.removeEventListener("touchend", onTouchEnd);
+      renderer.domElement.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+
       renderer.dispose();
       renderer.domElement.remove();
     };
@@ -183,6 +245,7 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
   useEffect(() => {
     currentBoxIndexRef.current = 0;
     creatingRef.current = false;
+    currentHoldingBoxIndex.current = -1;
     const scene = sceneRef.current;
     if (!scene || !problem) return;
 

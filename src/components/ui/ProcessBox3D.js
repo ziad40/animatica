@@ -61,24 +61,24 @@ export default class ProcessBox3D {
   update() {
     const pos = this.mesh.position;
     if (!this.setSpeed ){
-      this.speed.x = (this.targetState.x - pos.x) /500;
-      this.speed.y = (this.targetState.y - pos.y) /500;
-      this.speed.z = (this.targetState.z - pos.z) /500;
+      this.speed.x = Math.abs((this.targetState.x - pos.x)) /1500;
+      this.speed.y = Math.abs((this.targetState.y - pos.y)) /500;
+      this.speed.z = Math.abs((this.targetState.z - pos.z)) /1000;
       this.setSpeed = true;
     }
     if (!this.isFinalState()){
-      pos.x += this.speed.x;
-      pos.y += this.speed.y;
-      pos.z += this.speed.z;
+      pos.x += (this.targetState.x > pos.x ? 1 : -1) * this.speed.x;
+      pos.y += (this.targetState.y > pos.y ? 1 : -1) * this.speed.y;
+      pos.z += (this.targetState.z > pos.z ? 1 : -1) * this.speed.z;
     }
   }
 
   isFinalState() {
     const pos = this.mesh.position;
     return (
-      Math.abs(pos.x - this.targetState.x) <= 0.01  &&
-      Math.abs(pos.y - this.targetState.y) <= 0.01 &&
-      Math.abs(pos.z - this.targetState.z) <= 0.01
+      Math.abs(pos.x - this.targetState.x) <= 0.1  &&
+      Math.abs(pos.y - this.targetState.y) <= 0.1 &&
+      Math.abs(pos.z - this.targetState.z) <= 0.1
     );
   }
 
