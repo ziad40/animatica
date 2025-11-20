@@ -21,6 +21,11 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
   const currentHoldingBoxIndex = useRef(-1);
   const raycasterRef = useRef(new THREE.Raycaster());
   const pointerDragRef = useRef({ box: null, offset: new THREE.Vector3(), plane: null });
+  const shouldAnimateRef = useRef(true);
+
+  useEffect(() => {
+    shouldAnimateRef.current = threeDMode;
+  }, [threeDMode]);
 
   useEffect(() => {
     if (!threeDMode) return; 
@@ -208,22 +213,24 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
 
     // --- Animation Loop ---
     function animate() {
-      requestAnimationFrame(animate);
+      if (shouldAnimateRef.current) {
+          requestAnimationFrame(animate);
 
-      // First, ensure next box gets initialized (so update() uses correct initial position)
-      maybeCreateNextBox();
+          maybeCreateNextBox();
 
-      // Smooth zoom
-      camera.position.y += (targetY - camera.position.y) * 0.1;
-      const boxes = boxesRef.current;
-
-      // Only update boxes up to current index
-      for (let i = 0; i <= currentBoxIndexRef.current; i++) {
-        boxes[i]?.update();
+          camera.position.y += (targetY - camera.position.y) * 0.1;
+          const boxes = boxesRef.current;
+          for (let i = 0; i <= currentBoxIndexRef.current; i++) {
+            boxes[i]?.update();
+          }
+      } else {
+          // Keep rendering static scene without updating objects
+          requestAnimationFrame(animate);
       }
 
-      renderer.render(scene, camera);
-    }
+    renderer.render(scene, camera);
+  }
+
     animate();
 
     // CLEANUP
