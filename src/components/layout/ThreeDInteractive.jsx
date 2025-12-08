@@ -11,8 +11,8 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
   const lineRef = useRef([]);
   const minY = -70;
   const maxY = 70;
-  const minX = -30;
-  const maxX = 30;
+  const minX = -40;
+  const maxX = 40;
   const boxWidth = 5;
   const lineWidth = 1;
   const zdis = 5;
@@ -29,7 +29,7 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
   const lastTouchXRef = useRef(null);
   const panSpeed = 0.02; // adjust horizontal pan sensitivity
   const shouldAnimateRef = useRef(true);
-  const totalUnitTime = problem.solution.schedule.reduce((sum, p) => sum + (Number(p.timeUnits) || 0), 0);
+  const totalUnitTime = problem?.solution.schedule.reduce((sum, p) => sum + (Number(p.timeUnits) || 0), 0);
 
   // create a sprite with text using canvas
   function createTextSprite(text, opts = {}) {
