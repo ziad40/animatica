@@ -2,7 +2,7 @@ import  { useRef, useState, useEffect } from "react";
 import Playground from "./Playground";
 import Solution from "./Solution";
 
-const TwoDInteractive = ({ problem, isMobile }) => {
+const TwoDInteractive = ({ problem, isMobile, currentProblemId, setCurrentProblemId }) => {
   const [topHeight, setTopHeight] = useState(60);
   const rightRef = useRef(null);
   const isDraggingH = useRef(false);
@@ -47,7 +47,7 @@ const TwoDInteractive = ({ problem, isMobile }) => {
         }}
         className="bg-blue-50 overflow-auto"
       >
-        <Playground problem={problem} />
+        <Playground problem={problem} currentProblemId={currentProblemId} setCurrentProblemId={setCurrentProblemId} />
       </div>
 
       {!isMobile && (

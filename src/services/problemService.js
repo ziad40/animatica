@@ -15,8 +15,13 @@ export const getProblem = async (type) => {
 
 export const submitSolution = async (questionId, question, trialAnswer) => {
   try {
-    // Ensure leading slash so baseURL and path concatenate correctly
-    const response = await api.post("/problem/solve", { questionId, question, trialAnswer });
+    let response;
+    if (questionId == null) {
+        response = await api.post("/problem/solve", { question, trialAnswer });
+      } else {
+        response = await api.post("/problem/solve", { question, trialAnswer });
+      }
+
     return response.data;
   } catch (error) {
     console.error('Failed to submit solution : ', error);

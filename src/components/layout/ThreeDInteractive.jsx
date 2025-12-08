@@ -10,8 +10,11 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
   const boxesRef = useRef([]);
   const lineRef = useRef([]);
   const minY = -70;
-  const maxY = 40;
-  const width = 5;
+  const maxY = 70;
+  const minX = -30;
+  const maxX = 30;
+  const boxWidth = 5;
+  const lineWidth = 1;
   const zdis = 5;
   const startXPos = 0;
   const sceneRef = useRef(null);
@@ -21,7 +24,37 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
   const currentHoldingBoxIndex = useRef(-1);
   const raycasterRef = useRef(new THREE.Raycaster());
   const pointerDragRef = useRef({ box: null, offset: new THREE.Vector3(), plane: null });
+  const targetXRef = useRef(0);
+  const labelRef = useRef([]);
+  const lastTouchXRef = useRef(null);
+  const panSpeed = 0.02; // adjust horizontal pan sensitivity
   const shouldAnimateRef = useRef(true);
+  const totalUnitTime = problem.solution.schedule.reduce((sum, p) => sum + (Number(p.timeUnits) || 0), 0);
+
+  // create a sprite with text using canvas
+  function createTextSprite(text, opts = {}) {
+    const size = opts.size || 128;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0,0,size,size);
+    ctx.fillStyle = opts.bgColor || 'rgba(0,0,0,0)';
+    ctx.fillRect(0,0,size,size);
+    ctx.fillStyle = opts.color || '#ffffff';
+    const fontSize = Math.floor(size * (opts.fontScale || 0.4));
+    ctx.font = `bold ${fontSize}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(String(text), size/2, size/2 + (opts.dy||0));
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    const material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+    const sprite = new THREE.Sprite(material);
+    const scale = opts.scale || 4;
+    sprite.scale.set(scale, scale, 1);
+    return sprite;
+  }
 
   useEffect(() => {
     shouldAnimateRef.current = threeDMode;
@@ -78,20 +111,27 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
     let pinchStartDistance = 0;
     let isPinching = false;
 
-    // --- Desktop wheel zoom ---
+    // --- Desktop wheel: vertical -> zoom, horizontal -> pan X ---
     function onWheel(event) {
       event.preventDefault();
+      // vertical scroll -> camera Y
       targetY += event.deltaY * zoomSpeed * 2;
       targetY = Math.max(minY, Math.min(maxY, targetY));
+      // horizontal scroll -> camera X pan
+      targetXRef.current += event.deltaX * panSpeed;
+      targetXRef.current = Math.max(minX, Math.min(maxX, targetXRef.current));
     }
 
-    // --- Touch pinch zoom ---
+    // --- Touch handlers: pinch to zoom, single-touch to pan X ---
     function onTouchStart(e) {
       if (e.touches.length === 2) {
         isPinching = true;
         const dx = e.touches[0].clientX - e.touches[1].clientX;
         const dy = e.touches[0].clientY - e.touches[1].clientY;
         pinchStartDistance = Math.sqrt(dx * dx + dy * dy);
+      } else if (e.touches.length === 1) {
+        // start panning horizontally
+        lastTouchXRef.current = e.touches[0].clientX;
       }
     }
 
@@ -108,11 +148,21 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
         targetY = Math.max(minY, Math.min(maxY, targetY));
 
         pinchStartDistance = pinchCurrentDistance;
+      } else if (e.touches.length === 1) {
+        // pan horizontally using single touch
+        const tx = e.touches[0].clientX;
+        if (lastTouchXRef.current != null) {
+          const dx = tx - lastTouchXRef.current;
+          targetXRef.current -= dx * panSpeed * 0.5; // tune sensitivity
+          targetXRef.current = Math.max(minX, Math.min(maxX, targetXRef.current));
+        }
+        lastTouchXRef.current = tx;
       }
     }
 
-    function onTouchEnd() {
+    function onTouchEnd(e) {
       isPinching = false;
+      lastTouchXRef.current = null;
     }
 
     function getMouseNDC(event) {
@@ -213,23 +263,22 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
 
     // --- Animation Loop ---
     function animate() {
+      requestAnimationFrame(animate);
+
       if (shouldAnimateRef.current) {
-          requestAnimationFrame(animate);
+        maybeCreateNextBox();
 
-          maybeCreateNextBox();
+        camera.position.y += (targetY - camera.position.y) * 0.1;
+        camera.position.x += (targetXRef.current - camera.position.x) * 0.1;
 
-          camera.position.y += (targetY - camera.position.y) * 0.1;
-          const boxes = boxesRef.current;
-          for (let i = 0; i <= currentBoxIndexRef.current; i++) {
-            boxes[i]?.update();
-          }
-      } else {
-          // Keep rendering static scene without updating objects
-          requestAnimationFrame(animate);
+        const boxes = boxesRef.current;
+        for (let i = 0; i <= currentBoxIndexRef.current; i++) {
+          boxes[i]?.update();
+        }
       }
 
-    renderer.render(scene, camera);
-  }
+      renderer.render(scene, camera);
+    }
 
     animate();
 
@@ -279,7 +328,7 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
       // Center of this box = previousTop + (h / 2)
       const centerY = currentTop + h / 2;
       const box = new ProcessBox3D({
-        width: width,
+        width: boxWidth,
         height: h,
         depth:1,
         id: item.processId,
@@ -291,7 +340,7 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
           item.processId !== -1 ? `P${item.processId}\nA:${processes[item.processId].arrivalTime} B:${processes[item.processId].burstTime}` 
           : 'idle',
       });
-      currentTop += h+0.1;
+      currentTop += h;
       scene.add(box.mesh);
       boxesRef.current.push(box);
     }
@@ -307,17 +356,30 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
       line.dispose();
     });
     lineRef.current = [];
+    // remove old labels
+    labelRef.current.forEach(s => {
+      scene.remove(s);
+      if (s.material && s.material.map) s.material.map.dispose();
+      if (s.material) s.material.dispose();
+    });
+    labelRef.current = [];
 
     // 2. create new lines
-    for(let i=minY; i<=minY; i++){
+    for(let i=minY; i<=minY + totalUnitTime; i++){
         const line = new Line3D({
-        width: width,
+        width: lineWidth,
         color: 0xff0000,
-        position: { x: startXPos, y: i, z:zdis }
+        position: { x: startXPos-4, y: i, z:zdis }
       });
 
       scene.add(line.mesh);
       lineRef.current.push(line);
+
+      // add numeric label to the left of the line
+      const label = createTextSprite(i-minY, { size: 128, color: '#ffffff', scale: 2.5 });
+      label.position.set(startXPos - 6, i, zdis);
+      scene.add(label);
+      labelRef.current.push(label);
     }
   }, [problem]);
 

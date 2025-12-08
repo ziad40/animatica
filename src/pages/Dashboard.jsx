@@ -4,6 +4,7 @@ import Interactive from "@/components/layout/Interactive";
 
 const Dashboard = () => {
   const [problem, setProblem] = useState(null);
+  const [currentProblemId, setCurrentProblemId] = useState(null);
   const [threeDMode, setThreeDMode] = useState(false);
   // left column width in percent (0-100)
   const [leftWidth, setLeftWidth] = useState(40);
@@ -78,7 +79,9 @@ const Dashboard = () => {
           }}
           className="border-r border-gray-200 bg-white"
         >
-          <Problem problem = {problem} setProblem={setProblem} threeDMode={threeDMode} setThreeDMode={setThreeDMode}/>
+          <Problem problem = {problem} setProblem={setProblem}
+           threeDMode={threeDMode} setThreeDMode={setThreeDMode}
+           currentProblemId={currentProblemId} setCurrentProblemId={setCurrentProblemId}/>
         </div>
 
         {/* Vertical splitter - hidden on mobile */}
@@ -96,7 +99,7 @@ const Dashboard = () => {
 
         {/* RIGHT: Interactive (Playground + Solution with splitter / 3D) */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <Interactive problem={problem} isMobile={isMobile} threeDMode={threeDMode} />
+          <Interactive problem={problem} isMobile={isMobile} threeDMode={threeDMode} currentProblemId={currentProblemId} setCurrentProblemId={setCurrentProblemId}/>
         </div>
       </div>
     </div>

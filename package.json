@@ -9,11 +9,16 @@
   "dependencies": {
     "axios": "^1.12.2",
     "jwt-decode": "^4.0.0",
+    "katex": "^0.16.27",
     "lucide-react": "^0.546.0",
     "openai": "^6.7.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.9.4",
+    "rehype-katex": "^7.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0",
     "three": "^0.180.0"
   },
   "devDependencies": {

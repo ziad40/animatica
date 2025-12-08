@@ -3,7 +3,7 @@ import TwoDInteractive from "./TwoDInteractive";
 import ThreeDInteractive from "./ThreeDInteractive";
 
 // Interactive component wraps Playground (top) and Solution (bottom) with a horizontal splitter
-const Interactive = ({ problem, isMobile, threeDMode }) => {
+const Interactive = ({ problem, isMobile, threeDMode, currentProblemId, setCurrentProblemId }) => {
   const [hasOpened3D, setHasOpened3D] = useState(false);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const Interactive = ({ problem, isMobile, threeDMode }) => {
     <div className="h-full">
       {/* 2D */}
       <div className={`${threeDMode ? "hidden" : "block"} w-full h-full flex-1 min-w-0`}>
-        <TwoDInteractive problem={problem} isMobile={isMobile} />
+        <TwoDInteractive problem={problem} isMobile={isMobile} currentProblemId={currentProblemId} setCurrentProblemId={setCurrentProblemId} />
       </div>
 
       {/* 3D (mount only after entering 3D the 1st time) */}

@@ -3,9 +3,10 @@ import ProblemViewer from "../ui/problemViewer";
 import React, { useState } from 'react';
 import { getProblem } from "@/services/problemService";
 import Switcher from "../ui/switch";
+import ChatAI from "../ui/chatAI";
 
 
-const Problem = ({ problem, setProblem, threeDMode, setThreeDMode }) => {
+const Problem = ({ problem, setProblem, threeDMode, setThreeDMode, currentProblemId, setCurrentProblemId }) => {
   const [problemType, setProblemType] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -86,6 +87,9 @@ const Problem = ({ problem, setProblem, threeDMode, setThreeDMode }) => {
             <ProblemViewer processes={problem.question.processes } />
         </div>
         )}
+      {problem && 
+        <ChatAI problem={problem} currentProblemId={currentProblemId} setCurrentProblemId={setCurrentProblemId} />
+      }
     </div>
   );
 };

@@ -11,9 +11,8 @@ import { submitSolution } from "@/services/problemService";
 import { useOverlay } from "@/context/OverlayContextCard";
 import { Assistant } from '../ui/Assistant';
 
-const Playground = ({ problem }) => {
+const Playground = ({ problem , currentProblemId, setCurrentProblemId }) => {
   const [scheduledProcesses, setScheduledProcesses] = useState([]);
-  const [currentProblemId, setCurrentProblemId] = useState(null);
   const [submitted, setSubmitted] = useState(false);                     
   const [nextProcess, setNextProcess] = useState(null);
   const [nextEndTimeUnit, setNextEndTimeUnit] = useState(null);
@@ -70,12 +69,7 @@ const Playground = ({ problem }) => {
       averageWaitingTime: parseFloat(averageWaitingTime),
     };
     try {
-      let response;
-      if (currentProblemId == null) {
-        response = await submitSolution(null, problem, answer);
-      } else {
-        response = await submitSolution(currentProblemId, null, answer);
-      }
+      let response = await submitSolution(currentProblemId, problem, answer);
 
       if (response?.problemId) setCurrentProblemId(response.problemId);
       setSubmitted(true);

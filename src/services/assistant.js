@@ -12,3 +12,15 @@ export const getHelp = async (type, answer, solution) => {
     }
 };
 
+export const chat = async (questionId, questionBody, message) => {
+    try {
+        const response = await api.post("/bot/ask", { questionId, question: questionBody, message });
+        return response.data;
+    } catch (error) {
+        console.error("Failed to get chat:", error);
+        throw error;
+    }
+};
+
+
+
