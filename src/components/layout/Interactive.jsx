@@ -19,7 +19,7 @@ const Interactive = ({ problem, isMobile, threeDMode, currentProblemId, setCurre
 
       {/* 3D (mount only after entering 3D the 1st time) */}
       {hasOpened3D && (
-        <div className={`${threeDMode ? "block" : "hidden"} w-full h-full flex-1 min-w-0`} >
+        <div className={`${threeDMode ? "block" : "hidden"} w-full h-screen flex-1 min-w-0`} >
           <ThreeDInteractive problem={problem} threeDMode={threeDMode}/>
         </div>
       )}
