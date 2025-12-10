@@ -11,8 +11,8 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
   const lineRef = useRef([]);
   const minY = -70;
   const maxY = 70;
-  const minX = -40;
-  const maxX = 40;
+  const minX = -70;
+  const maxX = 70;
   const boxWidth = 5;
   const lineWidth = 1;
   const zdis = 5;
