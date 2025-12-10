@@ -61,9 +61,9 @@ export default class ProcessBox3D {
   update() {
     const pos = this.mesh.position;
     if (!this.setSpeed ){
-      this.speed.x = Math.abs((this.targetState.x - pos.x)) /1500;
-      this.speed.y = Math.abs((this.targetState.y - pos.y)) /500;
-      this.speed.z = Math.abs((this.targetState.z - pos.z)) /1000;
+      this.speed.x = 0.04;
+      this.speed.y = 0.04;
+      this.speed.z = 0.04;
       this.setSpeed = true;
     }
     if (!this.isFinalState()){
