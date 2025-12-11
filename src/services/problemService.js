@@ -19,7 +19,7 @@ export const submitSolution = async (questionId, question, trialAnswer) => {
     if (questionId == null) {
         response = await api.post("/problem/solve", { question, trialAnswer });
       } else {
-        response = await api.post("/problem/solve", { question, trialAnswer });
+        response = await api.post("/problem/solve", { questionId, trialAnswer });
       }
 
     return response.data;

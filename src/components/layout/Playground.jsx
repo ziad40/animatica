@@ -70,7 +70,7 @@ const Playground = ({ problem , currentProblemId, setCurrentProblemId }) => {
     };
     try {
       let response = await submitSolution(currentProblemId, problem, answer);
-
+      console.log(response);
       if (response?.problemId) setCurrentProblemId(response.problemId);
       setSubmitted(true);
       return response;
