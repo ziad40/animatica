@@ -6,6 +6,8 @@ import Header from "@/components/layout/Header";
 import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import StudentHistory from "@/pages/StudentHistory";
+import TeacherDashboard from "@/pages/TeacherDashboard";
 import "@/style.css";
 import { OverlayProvider } from "@/context/OverlayContextCard";
 
@@ -21,6 +23,8 @@ function App() {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/student-history" element={<StudentHistory />} />
+                <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
               </Routes>
             </main>
           </div>
