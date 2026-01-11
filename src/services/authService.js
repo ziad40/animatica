@@ -15,10 +15,10 @@ export const login = async (email, password) => {
   }
 };
 
-export const register = async (name, email, password) => {
+export const register = async (name, email, password, fullName) => {
   try {
     // Ensure leading slash so baseURL and path concatenate correctly
-    const response = await api.post("/auth/register", {name, email, password});
+    const response = await api.post("/auth/register", {name, email, password, fullName});
     // if response status is 201 then forward user to login page
     if (response.status === 201) {
       return response;

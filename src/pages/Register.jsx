@@ -7,6 +7,7 @@ const Register = () => {
   // If your UserContext exposes a register handler, use it so the app updates immediately.
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
   const [error, setError] = useState("");
@@ -24,7 +25,7 @@ const Register = () => {
     }
 
     try {
-      const res = await register(name, email, password);
+      const res = await register(name, email, password, fullName);
       if (res) {
         // update context so header and other components react immediately
         alert("registeration successful!");
@@ -53,6 +54,13 @@ const Register = () => {
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
+      <input
+        type="Full Name"
+        placeholder="full name"
+        className="border p-2 w-full mb-3"
+        value={fullName}
+        onChange={(e) => setFullName(e.target.value)}
+      />
       <PasswordInput
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -65,10 +73,10 @@ const Register = () => {
       {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
       <button
         type="submit"
-        disabled={!email || !name || !password || !rePassword || password !== rePassword}
+        disabled={!email || !name || !fullName || !password || !rePassword || password !== rePassword}
         className={
           "w-full px-4 py-2 rounded " +
-          (password && password === rePassword && email && name
+          (password && password === rePassword && email && name && fullName
             ? "bg-blue-500 text-white hover:bg-blue-600"
             : "bg-gray-200 text-gray-500 cursor-not-allowed")
         }
