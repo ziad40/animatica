@@ -3,6 +3,7 @@ import { UserContext } from "@/context/UserContext";
 import { getStudentAnalysis, getStudentQuestionAnalysis } from "@/services/analysisService";
 import QuestionDetails from "@/components/ui/QuestionDetails";
 import AttemptDetails from "@/components/ui/AttemptDetails";
+import ProgressChart from "@/components/ui/ProgressChart";
 
 const StudentHistory = () => {
   const { user } = useContext(UserContext);
@@ -67,6 +68,11 @@ const StudentHistory = () => {
           ))}
         </div>
       </div>
+      {analysis.progressRate && (
+        <div className="mb-8">
+          <ProgressChart progressRate={analysis.progressRate} />
+        </div>
+      )}
 
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-4">Solved Questions</h2>

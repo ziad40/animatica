@@ -3,6 +3,9 @@ import { UserContext } from "@/context/UserContext";
 import { getAllStudents, getAllStudentsStatistics, getStudentAnalysis, getStudentQuestionAnalysis } from "@/services/analysisService";
 import QuestionDetails from "@/components/ui/QuestionDetails";
 import AttemptDetails from "@/components/ui/AttemptDetails";
+import ProgressChart from "@/components/ui/ProgressChart";
+
+
 
 const TeacherDashboard = () => {
   const { user } = useContext(UserContext);
@@ -133,7 +136,11 @@ const TeacherDashboard = () => {
               ))}
             </div>
           </div>
-
+          {studentAnalysis.progressRate && (
+            <div className="mb-8">
+              <ProgressChart progressRate={studentAnalysis.progressRate} />
+            </div>
+          )}
           <div>
             <h3 className="text-lg font-medium mb-2">Solved Questions</h3>
             <div className="bg-white rounded-lg shadow overflow-hidden">

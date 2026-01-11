@@ -19,6 +19,7 @@ const Playground = ({ problem , currentProblemId, setCurrentProblemId }) => {
   const [currentTime, setCurrentTime] = useState([0]);
   const [waitingTimes, setWaitingTimes] = useState({});
   const [operations, setOperations] = useState({});
+  const [time, setTime] = useState(null);
   const [averageWaitingTime, setaverageWaitingTime] = useState(null);
   const { showOverlay } = useOverlay();
   const tolerance = 0.01;
@@ -35,6 +36,7 @@ const Playground = ({ problem , currentProblemId, setCurrentProblemId }) => {
     setWaitingTimes({});
     setOperations({});
     setaverageWaitingTime(null);
+    setTime(Date.now())
   }, [problem]);
 
   const handleAddProcess = () =>{
@@ -62,14 +64,19 @@ const Playground = ({ problem , currentProblemId, setCurrentProblemId }) => {
 
   const handleSolutionSubmit = async () => {
     // group scheduledProcesses, waitingTimes, averageWaitingTime into answer object
+    const now = Date.now();
     const answer = {
       scheduledProcesses,
       waitingTimes,
       operations,
       averageWaitingTime: parseFloat(averageWaitingTime),
+      time: now - time
     };
+    console.log('==============================');
+    console.log(now - time);
+    setTime(Date.now());
     try {
-      let response = await submitSolution(currentProblemId, problem, answer);
+      let response = await submitSolution(currentProblemId, problem, answer, now - time);
       console.log(response);
       if (response?.problemId) setCurrentProblemId(response.problemId);
       setSubmitted(true);

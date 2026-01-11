@@ -3,8 +3,9 @@ import TimeLine from "@/components/ui/timelineDrawer";
 import WaitingTimeTable from "@/components/ui/waitingTimeTable";
 
 const AttemptDetails = ({ attempt, questionDetails }) => {
-  const { trialAnswer, score, createdAt } = attempt;
+  const { trialAnswer, score, createdAt, time } = attempt;
   const { question, solution } = questionDetails;
+  
 
   // Color map for processes
   const colorMap = {
@@ -19,7 +20,7 @@ const AttemptDetails = ({ attempt, questionDetails }) => {
     <div className="border rounded-lg p-4 mb-4 bg-gray-50">
       <div className="flex justify-between items-center mb-3">
         <div className="text-sm text-gray-600">
-          <strong>Score:</strong> {(score * 100).toFixed(2)}% | <strong>Date:</strong> {new Date(createdAt).toLocaleString()}
+          <strong>Score:</strong> {(score * 100).toFixed(2)}% | <strong>Date:</strong> {new Date(createdAt).toLocaleString()} | <strong>Time Consumed:</strong> {time ? (time / (1000)).toString() +  " sec" : "Not Calculated"}
         </div>
       </div>
 

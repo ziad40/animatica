@@ -13,13 +13,13 @@ export const getProblem = async (type) => {
 };
 
 
-export const submitSolution = async (questionId, question, trialAnswer) => {
+export const submitSolution = async (questionId, question, trialAnswer, time) => {
   try {
     let response;
     if (questionId == null) {
-        response = await api.post("/problem/solve", { question, trialAnswer });
+        response = await api.post("/problem/solve", { question, trialAnswer, time });
       } else {
-        response = await api.post("/problem/solve", { questionId, trialAnswer });
+        response = await api.post("/problem/solve", { questionId, trialAnswer, time });
       }
 
     return response.data;
