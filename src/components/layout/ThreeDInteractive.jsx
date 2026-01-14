@@ -25,6 +25,8 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
   const raycasterRef = useRef(new THREE.Raycaster());
   const pointerDragRef = useRef({ box: null, offset: new THREE.Vector3(), plane: null });
   const targetXRef = useRef(0);
+  const targetYRef = useRef(-70 + 10);
+  const targetZRef = useRef(10);
   const labelRef = useRef([]);
   const lastTouchXRef = useRef(null);
   const panSpeed = 0.02; // adjust horizontal pan sensitivity
@@ -105,7 +107,8 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
     container.appendChild(renderer.domElement);
 
     // ---- Zoom State ---
-    let targetY = camera.position.y;
+    targetYRef.current = camera.position.y;
+    targetZRef.current = camera.position.z;
     const zoomSpeed = 0.003;
 
     let pinchStartDistance = 0;
@@ -115,8 +118,8 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
     function onWheel(event) {
       event.preventDefault();
       // vertical scroll -> camera Y
-      targetY += event.deltaY * zoomSpeed * 2;
-      targetY = Math.max(minY, Math.min(maxY, targetY));
+      targetYRef.current += event.deltaY * zoomSpeed * 2;
+      targetYRef.current = Math.max(minY, Math.min(maxY, targetYRef.current));
       // horizontal scroll -> camera X pan
       targetXRef.current += event.deltaX * panSpeed;
       targetXRef.current = Math.max(minX, Math.min(maxX, targetXRef.current));
@@ -144,8 +147,8 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
         const pinchCurrentDistance = Math.sqrt(dx * dx + dy * dy);
 
         const pinchDelta = pinchStartDistance - pinchCurrentDistance;
-        targetY += pinchDelta * zoomSpeed * 2;
-        targetY = Math.max(minY, Math.min(maxY, targetY));
+        targetYRef.current += pinchDelta * zoomSpeed * 2;
+        targetYRef.current = Math.max(minY, Math.min(maxY, targetYRef.current));
 
         pinchStartDistance = pinchCurrentDistance;
       } else if (e.touches.length === 1) {
@@ -268,8 +271,9 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
       if (shouldAnimateRef.current) {
         maybeCreateNextBox();
 
-        camera.position.y += (targetY - camera.position.y) * 0.1;
+        camera.position.y += (targetYRef.current - camera.position.y) * 0.1;
         camera.position.x += (targetXRef.current - camera.position.x) * 0.1;
+        camera.position.z += (targetZRef.current - camera.position.z) * 0.1;
 
         const boxes = boxesRef.current;
         for (let i = 0; i <= currentBoxIndexRef.current; i++) {
@@ -383,6 +387,36 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
     }
   }, [problem]);
 
+  const handleMoveLeft = () => {
+    targetXRef.current -= 5;
+    targetXRef.current = Math.max(minX, Math.min(maxX, targetXRef.current));
+  };
+
+  const handleMoveRight = () => {
+    targetXRef.current += 5;
+    targetXRef.current = Math.max(minX, Math.min(maxX, targetXRef.current));
+  };
+
+  const handleMoveUp = () => {
+    targetYRef.current += 5;
+    targetYRef.current = Math.max(minY, Math.min(maxY, targetYRef.current));
+  };
+
+  const handleMoveDown = () => {
+    targetYRef.current -= 5;
+    targetYRef.current = Math.max(minY, Math.min(maxY, targetYRef.current));
+  };
+
+  const handleZoomIn = () => {
+    targetZRef.current -= 2;
+    targetZRef.current = Math.max(2, Math.min(30, targetZRef.current));
+  };
+
+  const handleZoomOut = () => {
+    targetZRef.current += 2;
+    targetZRef.current = Math.max(2, Math.min(30, targetZRef.current));
+  };
+
   return (
     <div
         ref={containerRef}
@@ -395,6 +429,69 @@ const ThreeDInteractive = ({ problem, threeDMode }) => {
             muted
             className="absolute inset-0 w-full h-full object-cover z-0"
         />
+
+        {/* Control Buttons */}
+        <div className="absolute bottom-6 right-6 z-10 bg-black bg-opacity-70 p-6 rounded-xl shadow-2xl">
+          {/* Top Row: Movement Controls */}
+          <div className="flex gap-4 mb-4">
+            {/* Left Button */}
+            <button
+              onClick={handleMoveLeft}
+              className="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all duration-200 active:scale-95 shadow-lg flex items-center justify-center"
+              title="Move Left"
+            >
+              ←
+            </button>
+
+            {/* Up Button */}
+            <button
+              onClick={handleMoveUp}
+              className="w-12 h-12 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-all duration-200 active:scale-95 shadow-lg flex items-center justify-center"
+              title="Move Up"
+            >
+              ↑
+            </button>
+
+            {/* Right Button */}
+            <button
+              onClick={handleMoveRight}
+              className="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all duration-200 active:scale-95 shadow-lg flex items-center justify-center"
+              title="Move Right"
+            >
+              →
+            </button>
+          </div>
+
+          {/* Bottom Row: Zoom Controls */}
+          <div className="flex gap-4">
+            {/* Down Button */}
+            <button
+              onClick={handleMoveDown}
+              className="w-12 h-12 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-all duration-200 active:scale-95 shadow-lg flex items-center justify-center"
+              title="Move Down"
+            >
+              ↓
+            </button>
+
+            {/* Zoom In Button */}
+            <button
+              onClick={handleZoomIn}
+              className="w-12 h-12 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition-all duration-200 active:scale-95 shadow-lg flex items-center justify-center text-lg"
+              title="Zoom In"
+            >
+              +
+            </button>
+
+            {/* Zoom Out Button */}
+            <button
+              onClick={handleZoomOut}
+              className="w-12 h-12 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition-all duration-200 active:scale-95 shadow-lg flex items-center justify-center text-lg"
+              title="Zoom Out"
+            >
+              −
+            </button>
+          </div>
+        </div>
     </div>
 
   );
