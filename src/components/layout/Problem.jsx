@@ -50,6 +50,10 @@ const Problem = ({ problem, setProblem, threeDMode, setThreeDMode, currentProble
           <DropDown
             options={[
               { label: "First Come First Serve", value: "FCFS" },
+              { label: "Shortest Job First", value: "SJF" },
+              { label: "Priority", value: "priority" },
+              { label: "Round Robin", value: "Round-Robin" },
+              { label: "Shortest Remaining Time First", value: "SRTF" },
             ]}
             selectedValue={problemType}
             onSelect={(value) => {
@@ -84,7 +88,7 @@ const Problem = ({ problem, setProblem, threeDMode, setThreeDMode, currentProble
             <p>arrange the following processes according to {problem.type } algorithm and calculate the average waiting time and average turnaround time.</p>
             <br></br>
             <p>Break Tie by process ID</p>
-            <ProblemViewer processes={problem.question.processes } />
+            <ProblemViewer processes={problem.question.processes } type={problem.type} timeQuantum={problem.question.timeQuantum} />
         </div>
         )}
       {problem && 
