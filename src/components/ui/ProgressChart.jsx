@@ -34,6 +34,18 @@ const ProgressChart = ({ progressRate }) => {
 
   if (!data.length) return null;
 
+  // Define colors for each algorithm type
+  const strokeColors = {
+    fcfs: "#2563eb",
+    sjf: "#dc2626",
+    priority: "#16a34a",
+    "round-robin": "#f59e0b",
+    rr: "#f59e0b",
+    srtf: "#8b5cf6"
+  };
+
+  const types = Object.keys(progressRate || {});
+
   return (
     <div className="bg-white p-4 rounded-lg shadow">
       <h2 className="text-xl font-semibold mb-4">
@@ -56,9 +68,15 @@ const ProgressChart = ({ progressRate }) => {
           />
           <Legend />
 
-          <Line type="monotone" dataKey="fcfs" stroke="#2563eb" />
-          {/* <Line type="monotone" dataKey="rr" stroke="#16a34a" />
-          <Line type="monotone" dataKey="sjf" stroke="#dc2626" /> */}
+          {types.map((type) => (
+            <Line
+              key={type}
+              type="monotone"
+              dataKey={type}
+              stroke={strokeColors[type] || "#6366f1"}
+              isAnimationActive={true}
+            />
+          ))}
         </LineChart>
       </ResponsiveContainer>
     </div>

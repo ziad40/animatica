@@ -72,12 +72,9 @@ const Playground = ({ problem , currentProblemId, setCurrentProblemId }) => {
       averageWaitingTime: parseFloat(averageWaitingTime),
       time: now - time
     };
-    console.log('==============================');
-    console.log(now - time);
     setTime(Date.now());
     try {
       let response = await submitSolution(currentProblemId, problem, answer, now - time);
-      console.log(response);
       if (response?.problemId) setCurrentProblemId(response.problemId);
       setSubmitted(true);
       return response;
