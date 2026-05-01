@@ -4,6 +4,62 @@ A modern, interactive React-based frontend for learning Operating System schedul
 
 **Backend Repository**: [animatica-Express](https://github.com/ziad40/animatica-Express) | **GitHub Profile**: [ziad40](https://github.com/ziad40)
 
+
+## Diagrams
+
+### Component/Class Diagram
+
+```mermaid
+classDiagram
+   class Header
+   class Playground
+   class Problem
+   class Solution
+   class ThreeDInteractive
+   class TwoDInteractive
+   Header <|-- Playground
+   Playground <|-- TwoDInteractive
+   Playground <|-- ThreeDInteractive
+   Playground <|-- Solution
+   Problem <|-- Playground
+   Solution <|-- Playground
+```
+
+### 🔄 Sequence Diagram (Problem Solving)
+
+```mermaid
+sequenceDiagram
+   participant User
+   participant Header
+   participant Problem
+   participant Playground
+   participant Solution
+   participant Visualization
+   User->>Header: Login
+   User->>Problem: Select/Generate Problem
+   Problem->>Playground: Pass Problem Data
+   Playground->>Solution: Submit Solution
+   Solution->>Visualization: Show 2D/3D
+   User->>Solution: View Results
+```
+
+### 🧑‍🎓 Use Case Diagram
+
+```mermaid
+usecaseDiagram
+   actor Student
+   actor Teacher
+   Student --> (Login)
+   Student --> (Solve Problem)
+   Student --> (View Solution)
+   Student --> (Visualize Solution)
+   Student --> (Track Progress)
+   Teacher --> (Login)
+   Teacher --> (View Dashboard)
+   Teacher --> (Manage Problems)
+   Teacher --> (View Analytics)
+```
+
 ## 📋 Table of Contents
 
 - [Project Overview](#project-overview)
