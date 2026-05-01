@@ -25,7 +25,7 @@ classDiagram
    Solution <|-- Playground
 ```
 
-### 🔄 Sequence Diagram (Problem Solving)
+### Sequence Diagram (Problem Solving)
 
 ```mermaid
 sequenceDiagram
@@ -43,21 +43,22 @@ sequenceDiagram
    User->>Solution: View Results
 ```
 
-### 🧑‍🎓 Use Case Diagram
+
+### Use Case Diagram
 
 ```mermaid
-usecaseDiagram
-   actor Student
-   actor Teacher
-   Student --> (Login)
-   Student --> (Solve Problem)
-   Student --> (View Solution)
-   Student --> (Visualize Solution)
-   Student --> (Track Progress)
-   Teacher --> (Login)
-   Teacher --> (View Dashboard)
-   Teacher --> (Manage Problems)
-   Teacher --> (View Analytics)
+flowchart TD
+   Student((Student))
+   Teacher((Teacher))
+   Student -- Login --> Login
+   Student -- Solve Problem --> Solve
+   Student -- View Solution --> Solution
+   Student -- Visualize Solution --> Visualize
+   Student -- Track Progress --> Progress
+   Teacher -- Login --> Login
+   Teacher -- View Dashboard --> Dashboard
+   Teacher -- Manage Problems --> Manage
+   Teacher -- View Analytics --> Analytics
 ```
 
 ## 📋 Table of Contents
